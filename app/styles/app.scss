@@ -3,14 +3,18 @@
 
 $enable-flex: true;
 
+$brand-primary: gold;
 $body-bg: black;
 
 $card-bg: black;
+$card-border-color: $brand-primary;
 
-$navbar-dark-color:                 rgba(gold,.5);
-$navbar-dark-hover-color:           rgba(gold,.75);
-$navbar-dark-active-color:          rgba(gold, 1);
-$navbar-dark-disabled-color:        rgba(gold,.25);
+
+
+$navbar-dark-color:                 rgba($brand-primary,.5);
+$navbar-dark-hover-color:           rgba($brand-primary,.75);
+$navbar-dark-active-color:          rgba($brand-primary, 1);
+$navbar-dark-disabled-color:        rgba($brand-primary,.25);
 
 @import 'bootstrap';
 @import "pod-styles";
