@@ -51,5 +51,8 @@
     "ember-topojson": "0.0.3",
     "loader.js": "^4.0.1",
     "topojson": "1.6.26"
+  },
+  "dependencies": {
+    "ember-tether": "^0.3.1"
   }
 }
