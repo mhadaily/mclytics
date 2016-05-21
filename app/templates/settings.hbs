@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <div class="row m-t-1">
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="card card-block">
+        <h4 class="card-title">{{model.name}}</h4>
+        <p class="card-text">{{model.email}}</p>
+      </div>
+      <button {{action 'invalidateSession'}} class="btn btn-danger btn-block">Logout</button>
+    </div>
+  </div>
+</div>
+{{outlet}}
