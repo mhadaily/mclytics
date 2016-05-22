@@ -42,10 +42,11 @@ module.exports = function(environment) {
   if (environment === 'production') {
 
   }
-  
+
   ENV.apiHost = process.env.API_HOST || 'mobecentral.herokuapp.com'
   ENV.apiPort = process.env.API_PORT ? ':' + process.env.API_PORT : ''
-  ENV.apiUrl = process.env.API_URL || `http://${ENV.apiHost}${ENV.apiPort}`;
+  ENV.apiProtocol = process.env.API_PROTOCOL ? `${process.env.API_PROTOCOL}://` : (environment == 'production' ? 'https://' : 'http://')
+  ENV.apiUrl = process.env.API_URL || `${ENV.apiProtocol}${ENV.apiHost}${ENV.apiPort}`;
 
   return ENV;
 };
