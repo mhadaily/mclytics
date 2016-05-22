@@ -43,5 +43,7 @@ module.exports = function(environment) {
 
   }
 
+  ENV.apiUrl = process.env.API_URL || `http://${ENV.apiHost}${ENV.apiPort}`;
+
   return ENV;
 };
