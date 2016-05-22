@@ -26,7 +26,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         }).then(data => {
           if (data) {
             store.pushPayload(data);
-            resolve(store.peekRecord('user', data.user.id));
+            resolve(store.peekRecord('user', data.data.id));
           } else {
             reject({});
             session.invalidate();
