@@ -6,10 +6,11 @@ $enable-flex: true;
 $brand-primary: gold;
 $body-bg: black;
 
-$card-bg: black;
-$card-border-color: $brand-primary;
+$card-bg: rgba($gray-dark,.25);
+$card-border-color: rgba($brand-primary,.5);
 
-
+$list-group-bg: rgba($gray-dark,.25);
+$list-group-border-color: rgba($brand-primary,.5);
 
 $navbar-dark-color:                 rgba($brand-primary,.5);
 $navbar-dark-hover-color:           rgba($brand-primary,.75);
@@ -19,6 +20,11 @@ $navbar-dark-disabled-color:        rgba($brand-primary,.25);
 @import 'bootstrap';
 @import "pod-styles";
 
+.bg-inverse {
+  color: $gray-lighter;
+  background-color: rgba($gray-dark,.25);
+}
+
 body {
-  padding-top: 60px;
+  padding-top: 54px;
 }
