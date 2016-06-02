@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <div class="card-group m-t-1">
+    {{#each totals as |department| }}
+      <div class="card card-block">
+        <h4 class="list-group-item-heading">{{format-number department.total format="(0a)"}}</h4>
+        <p class="list-group-item-text">{{department.name}}</p>
+      </div>
+    {{/each}}
+  </div>
+  <div class="row m-t-1">
+    <div class="col-sm-12">
+      <div class="card">{{graph-bar data=totalsByDate departments=departments}}</div>
+    </div>
+  </div>
+</div>

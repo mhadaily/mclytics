@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     d3.csv("https://gist.githubusercontent.com/dnprock/bb5a48a004949c7c8c60/raw/a30283e5eaf43dd2986c3e991ee299521046fc87/population.csv", function(err, data) {
       var config = { "data0": "Country (or dependent territory)", "data1": "Population", "label0": "label 0", "label1": "label 1", "color0": "#99ccff", "color1": "#0050A1", "width": 800, "height": 400 }
 
-      var width = 800,
+      var width = 600,
         height = 300;
 
       var COLOR_COUNTS = 9;

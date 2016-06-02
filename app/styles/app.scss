@@ -1,15 +1,27 @@
 
-@import 'variables';
+// $enable-flex: true;
 
-$enable-flex: true;
+$brand-primary: steelblue;
 
-$brand-primary: gold;
-$body-bg: black;
+$gray-dark:                 $brand-primary;
+$gray:                      darken($brand-primary, 10%);
+$gray-light:                darken($brand-primary, 20%);
+$gray-lighter:              darken($brand-primary, 30%);
+$gray-lightest:             darken($brand-primary, 40%);
 
-$card-bg: rgba($gray-dark,.25);
+// $brand-primary:             #0275d8;
+// $brand-success:             #5cb85c;
+// $brand-info:                #5bc0de;
+// $brand-warning:             #f0ad4e;
+// $brand-danger:              #d9534f;
+
+$body-bg:                   white;
+$body-color:                $gray-dark;
+
+$card-bg: rgba($body-bg,.25);
 $card-border-color: rgba($brand-primary,.5);
 
-$list-group-bg: rgba($gray-dark,.25);
+$list-group-bg: rgba($body-bg,.25);
 $list-group-border-color: rgba($brand-primary,.5);
 
 $navbar-dark-color:                 rgba($brand-primary,.5);
@@ -21,8 +33,8 @@ $navbar-dark-disabled-color:        rgba($brand-primary,.25);
 @import "pod-styles";
 
 .bg-inverse {
-  color: $gray-lighter;
-  background-color: rgba($gray-dark,.25);
+  // color: $gray-lighter;
+  // background-color: rgba($,.25);
 }
 
 body {
