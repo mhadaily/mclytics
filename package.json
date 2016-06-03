@@ -43,7 +43,6 @@
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-component-css": "0.1.9",
-    "ember-crossfilter": "0.2.5",
     "ember-d3": "0.2.0",
     "ember-data": "^2.5.0",
     "ember-export-application-global": "^1.0.5",
