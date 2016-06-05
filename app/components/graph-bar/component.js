@@ -4,14 +4,25 @@ import numeral from 'numeral';
 import ResizeAware from 'ember-resize/mixins/resize-aware';
 
 export default Ember.Component.extend(ResizeAware, {
-  debouncedDidResize() {
-    // this.update();
+
+  // debouncedDidResize() {
+  //   this.update();
+  // },
+
+  didResize() {
+    this.update();
   },
 
   init() {
     this._super(...arguments);
 
     this.on('didInsertElement',function() {
+      var svg = d3.select(this.element).append('svg').append('g');
+      svg.append("g")
+        .attr("class", "x axis");
+      svg.append("g")
+        .attr("class", "y axis")
+        .append("text");
 
       this.update();
 
@@ -54,10 +65,10 @@ export default Ember.Component.extend(ResizeAware, {
         .ticks(5, "$")
         .tickFormat(function(d){return numeral(d).format('0.0a');});
 
-    var svg = d3.select(this.element).append("svg")
+    var svg = d3.select(this.element).select("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-      .append("g")
+      .select("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var data = this.get('data');
@@ -65,28 +76,28 @@ export default Ember.Component.extend(ResizeAware, {
       x.domain(data.map(function(d) { return d.date; }));
       y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
-      svg.append("g")
-          .attr("class", "x axis")
+      svg.select("g.x.axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis);
 
-      svg.append("g")
-          .attr("class", "y axis")
+      svg.select('g.y.axis')
           .call(yAxis)
-        .append("text")
+        .select("text")
           .attr("transform", "rotate(-90)")
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
           .text("Revenue");
 
-      svg.selectAll(".bar")
-          .data(data)
-        .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", function(d) { return x(d.date); })
-          .attr("width", x.rangeBand())
-          .attr("y", function(d) { return y(d.total); })
-          .attr("height", function(d) { return height - y(d.total); });  }
+      var bars = svg.selectAll(".bar").data(data);
+      bars.enter().append("rect")
+        .attr("class", "bar");
+      bars.attr("x", function(d) { return x(d.date); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.total); })
+        .attr("height", function(d) { return height - y(d.total); });
+      // bars.remove();
+
+  }
 
 });
