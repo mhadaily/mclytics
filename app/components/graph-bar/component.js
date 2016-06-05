@@ -21,7 +21,7 @@ export default Ember.Component.extend(ResizeAware, {
   update() {
 
     var rect    = this.element.getBoundingClientRect(),
-        margin  = {top: 20, right: 20, bottom: 30, left: 40},
+        margin  = {top: 20, right: 20, bottom: 30, left: 60},
         width   = Math.max(0, rect.width - margin.left - margin.right),
         height  = Math.max(0, rect.height - margin.top - margin.bottom);
 
