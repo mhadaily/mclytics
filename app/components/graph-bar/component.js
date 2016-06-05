@@ -46,14 +46,13 @@ export default Ember.Component.extend(ResizeAware, {
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(10)
         .tickFormat(timeFormat);
 
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .ticks(10, "$")
-        .tickFormat(function(d){return numeral(d).format('0a');});
+        .ticks(5, "$")
+        .tickFormat(function(d){return numeral(d).format('0.0a');});
 
     var svg = d3.select(this.element).append("svg")
         .attr("width", width + margin.left + margin.right)
