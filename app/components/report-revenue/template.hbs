@@ -6,8 +6,14 @@
     </div>
     {{/each}}
   </div>
-  <div class="card card-block m-t-1"><h1>{{format-number total format="(,0)"}}</h1></div>
-  <div class="card card-block m-t-1">{{graph-bar data=totalsByDate departments=departments}}</div>
+  <div class="row m-t-1">
+    <div class="col-sm-9">
+      <div class="card card-block">{{graph-bar data=totalsByDate departments=departments}}</div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card card-block"><h1>{{format-number total format="(,0)"}}</h1></div>
+    </div>
+  </div>
   <div class="card-group m-t-1">
     {{#each totalsByDepartment as |department| }}
       <div class="card">
