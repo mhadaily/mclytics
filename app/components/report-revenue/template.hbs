@@ -1,15 +1,29 @@
 <div class="container-fluid">
   <div class="card-group m-t-1">
-    {{#each totals as |department| }}
-      <div class="card card-block">
-        <h4 class="list-group-item-heading">{{format-number department.total format="(0a)"}}</h4>
-        <p class="list-group-item-text">{{department.name}}</p>
-      </div>
+    {{#each departmentGroup as |department|}}
+    <div class="card card-block">
+        {{department.name}}
+    </div>
     {{/each}}
   </div>
-  <div class="row m-t-1">
-    <div class="col-sm-12">
-      <div class="card">{{graph-bar data=totalsByDate departments=departments}}</div>
-    </div>
+  <div class="card card-block m-t-1"><h1>{{format-number total format="(,0)"}}</h1></div>
+  <div class="card card-block m-t-1">{{graph-bar data=totalsByDate departments=departments}}</div>
+  <div class="card-group m-t-1">
+    {{#each totalsByDepartment as |department| }}
+      <div class="card">
+        <div class="card-block">
+          <h4 class="list-group-item-heading">{{format-number department.total format="(,0)"}}</h4>
+          <p class="list-group-item-text">{{department.name}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          {{#each department.products as |product| }}
+            <li class="list-group-item">
+              <strong>{{format-number product.total format=",0"}}</strong>
+              <br /> {{product.name}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/each}}
   </div>
 </div>

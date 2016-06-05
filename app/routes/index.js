@@ -5,10 +5,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model() {
     return Ember.RSVP.hash({
-      ledgerAccounts: Ember.$.getJSON(`${config.apiUrl}/api/ledger_accounts`),
-      ledgerEntries: Ember.$.getJSON(`${config.apiUrl}/api/ledger_entries`),
       journalEntries: Ember.$.getJSON(`${config.apiUrl}/api/journal_entries`),
-      departments: this.store.findAll('department')
+      departments: this.store.findAll('department'),
+      products: this.store.findAll('product'),
     });
   }
 });

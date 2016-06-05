@@ -1,53 +1,102 @@
 import Ember from 'ember';
+import d3 from 'd3';
+
+var amount = function(d) { return d.amount; };
 
 export default Ember.Component.extend({
 
   store: Ember.inject.service(),
 
-  ledgerAccounts: [],
-  ledgerEntries: [],
-  journalEntries: [],
+  data: [],
   departments: [],
+  productss: [],
+  targets: [],
 
-  entries: Ember.computed('journalEntries',function() {
-    return crossfilter(this.journalEntries);
+  entries: Ember.computed('data',function() {
+
+    return crossfilter(this.get('data'));
   }),
 
-  entriesByDepartment: Ember.computed('entries',function() {
+  departmentDimension: Ember.computed('entries',function() {
     return this.get('entries').dimension(function(d) { return d.department_id; });
   }),
 
-  amountSumByDepartement: Ember.computed('entriesByDepartment',function() {
-    return this.get('entriesByDepartment').group().reduceSum(function(d) { return d.amount; });
-  }),
-
-  entriesByProduct: Ember.computed('entries',function() {
+  productDimension: Ember.computed('entries',function() {
     return this.get('entries').dimension(function(d) { return d.product_id; });
   }),
 
-  amountSumByProduct: Ember.computed('entriesByProduct',function() {
-    return this.get('entriesByProduct').group().reduceSum(function(d) { return d.amount; });
+  dateDimension: Ember.computed('entries',function() {
+    var format = d3.time.format("%Y-%m-%d");
+    return this.get('entries').dimension(function(d) { return format.parse(d.date); });
   }),
 
-  entriesByDate: Ember.computed('entries',function() {
-    return this.get('entries').dimension(function(d) { return new Date(d.date); });
+  groupDimension: Ember.computed('entries',function() {
+    return this.get('entries').dimension(function(d) { return d.product.product_group ? d.product.product_group : 'no group' });
   }),
 
-  amountSumByDate: Ember.computed('entries',function() {
-    return this.get('entriesByDate').group().reduceSum(function(d) { return d.amount; });
+  departmentGroup: Ember.computed('entries', function() {
+    return this.get('departmentDimension').group().all().map(d => {
+      d.name = this.get('store').peekRecord('department',d.key).get('name');
+      return d;
+    });
   }),
 
-  totals: Ember.computed('amountSumByDepartement', function(){
+  amountSumByDepartement: Ember.computed('departmentDimension',function() {
+    return this.get('departmentDimension').group().reduceSum(function(d) { return d.amount; });
+  }),
+
+  amountSumByProduct: Ember.computed('productDimension',function() {
+    return this.get('productDimension').group().reduceSum(function(d) { return d.amount; });
+  }),
+
+  amountSumByDate: Ember.computed('data',function() {
+    return this.get('dateDimension').group().reduceSum(function(d) { return d.amount; });
+  }),
+
+  totalsByDepartment: Ember.computed('amountSumByDepartement', function(){
     var departments = this.get('departments');
 
     return this.get('amountSumByDepartement').all().map(d => {
-      return {name: this.get('store').peekRecord('department',d.key).get('name'),total: d.value}
+      this.get('dateDimension').filterAll();
+      this.get('departmentDimension').filter(d.key);
+
+      var products = this.get('groupDimension').group().reduceSum(d => {return d.amount; }).all().map(d => {
+        return {
+          name: d.key,
+          total: d.value
+        }
+      });
+      return {
+        name: this.get('store').peekRecord('department',d.key).get('name'),
+        total: d.value,
+        products: products
+      };
     });
   }),
 
   totalsByDate: Ember.computed('amountSumByDate', function(){
-    return this.get('amountSumByDate').all().map(function(d) {
-      return {date: d.key, total: d.value}
+
+    this.get('departmentDimension').filterAll();
+    this.get('productDimension').filterAll();
+
+    return this.get('dateDimension').group().all().map(d => {
+
+      this.get('dateDimension').filter(d.key);
+      var total = this.get('entries').groupAll().reduceSum(function(d){return d.amount}).value();
+      this.get('dateDimension').filterRange([d3.time.month(d.key),d.key]);
+      var runningTotal = total + this.get('entries').groupAll().reduceSum(function(d){return d.amount}).value();
+
+      return {
+        date: d.key,
+        count: d.value,
+        total: total,
+        runningTotal: runningTotal
+      }
     });
+  }),
+
+  total: Ember.computed('entries', function() {
+   debugger;  return this.get('entries').groupAll().reduceSum(amount).value();
   })
+
 });
