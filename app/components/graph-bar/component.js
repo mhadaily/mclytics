@@ -24,6 +24,12 @@ export default Ember.Component.extend(ResizeAware, {
         .attr("class", "y axis")
         .append("text");
 
+      svg.append('path')
+        .attr("class", "line")
+      svg.append('path')
+        .attr("class", "area")
+      svg.append('path')
+        .attr("class", "target")
       this.update();
 
     });
@@ -65,6 +71,15 @@ export default Ember.Component.extend(ResizeAware, {
         .ticks(5, "$")
         .tickFormat(function(d){return numeral(d).format('0.0a');});
 
+    var line = d3.svg.line()
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.runningTotal); });
+
+    var area = d3.svg.area()
+        .x(function(d) { return x(d.date); })
+        .y0(height)
+        .y1(function(d) { return y(d.runningTotal); });
+
     var svg = d3.select(this.element).select("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -73,8 +88,11 @@ export default Ember.Component.extend(ResizeAware, {
 
     var data = this.get('data');
 
-      x.domain(data.map(function(d) { return d.date; }));
-      y.domain([0, d3.max(data, function(d) { return d.total; })]);
+      // x.domain(data.map(function(d) { return d.date; }));
+      // x.domain(data.map(function(d) { return d.date; }));
+      x.domain(d3.time.day.range(new Date('2016-05-31 00:00:00'), d3.time.month.ceil(new Date())));
+      // y.domain([0, d3.max(data, function(d) { return d.runningTotal; })]);
+      y.domain([0, 12000211.00]);
 
       svg.select("g.x.axis")
           .attr("transform", "translate(0," + height + ")")
@@ -88,6 +106,18 @@ export default Ember.Component.extend(ResizeAware, {
           .attr("dy", ".71em")
           .style("text-anchor", "end")
           .text("Revenue");
+
+      svg.select('path.line')
+          .datum(data)
+          .attr("d", line);
+
+      svg.select('path.area')
+          .datum(data)
+          .attr("d", area);
+
+      svg.select('path.target')
+          .datum([{date:new Date('2016-06-01 00:00:00'),runningTotal:0},{date:new Date('2016-06-30 00:00:00'),runningTotal:12000211.00}])
+          .attr("d", line);
 
       var bars = svg.selectAll(".bar").data(data);
       bars.enter().append("rect")

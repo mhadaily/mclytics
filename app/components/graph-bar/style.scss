@@ -26,3 +26,19 @@
 .x.axis path {
   display: none;
 }
+
+.line {
+  fill: none;
+  stroke: red;
+  stroke-width: 1.5px;
+}
+.target {
+  fill: none;
+  stroke: green;
+  stroke-width: 1.5px;
+}
+.area {
+  fill: pink;
+  stroke: none;
+  stroke-width: 1.5px;
+}
