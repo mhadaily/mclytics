@@ -96,7 +96,7 @@ export default Ember.Component.extend({
   }),
 
   total: Ember.computed('entries', function() {
-   debugger;  return this.get('entries').groupAll().reduceSum(amount).value();
+   return this.get('data').reduce(function(a,b){return {amount: Number(a.amount) + Number(b.amount)};}).amount;
   })
 
 });
