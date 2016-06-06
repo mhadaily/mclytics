@@ -1,6 +1,6 @@
 & {
   width: 100%;
-  height: 250px;
+  height: 300px;
 }
 
 .bar {
@@ -40,5 +40,10 @@
 .area {
   fill: pink;
   stroke: none;
+  stroke-width: 1.5px;
+}
+.trendline {
+  fill: none;
+  stroke: maroon;
   stroke-width: 1.5px;
 }

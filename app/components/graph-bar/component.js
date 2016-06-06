@@ -3,6 +3,30 @@ import d3 from 'd3';
 import numeral from 'numeral';
 import ResizeAware from 'ember-resize/mixins/resize-aware';
 
+
+function leastSquares(xSeries, ySeries) {
+  var reduceSumFunc = function(prev, cur) { return prev + cur; };
+
+  var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
+  var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+
+  var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+    .reduce(reduceSumFunc);
+
+  var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+    .reduce(reduceSumFunc);
+
+  var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+    .reduce(reduceSumFunc);
+
+  var slope = ssXY / ssXX;
+  var intercept = yBar - (xBar * slope);
+  var rSquare = Math.pow(ssXY, 2) / (ssXX * ssYY);
+
+  return [slope, intercept, rSquare];
+}
+
+
 export default Ember.Component.extend(ResizeAware, {
 
   // debouncedDidResize() {
@@ -88,45 +112,78 @@ export default Ember.Component.extend(ResizeAware, {
 
     var data = this.get('data');
 
-      // x.domain(data.map(function(d) { return d.date; }));
-      // x.domain(data.map(function(d) { return d.date; }));
-      x.domain(d3.time.day.range(new Date('2016-05-31 00:00:00'), d3.time.month.ceil(new Date())));
-      // y.domain([0, d3.max(data, function(d) { return d.runningTotal; })]);
-      y.domain([0, 12000211.00]);
+    var xRange = d3.time.day.range(new Date('2016-05-31 00:00:00'), d3.time.month.ceil(new Date()))
+    // x.domain(data.map(function(d) { return d.date; }));
+    // x.domain(data.map(function(d) { return d.date; }));
+    x.domain(xRange);
+    // y.domain([0, d3.max(data, function(d) { return d.runningTotal; })]);
+    y.domain([0, 12000211.00]);
 
-      svg.select("g.x.axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
 
-      svg.select('g.y.axis')
-          .call(yAxis)
-        .select("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Revenue");
+    var xSeries = d3.range(1,data.length+1).slice(0,-1);
+    var ySeries = data.map(function(d){return d.runningTotal}).slice(0,-1);
 
-      svg.select('path.line')
-          .datum(data)
-          .attr("d", line);
+    var leastSquaresCoeff = leastSquares(xSeries,ySeries);
 
-      svg.select('path.area')
-          .datum(data)
-          .attr("d", area);
+    // apply the reults of the least squares regression
+    var x1 = xRange[0];
+    var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
+    // var x2 = data[data.length - 1].date;
+    var x2 = xRange[xRange.length - 1]
+    // var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+    var y2 = leastSquaresCoeff[0] * 30 + leastSquaresCoeff[1];
+    var trendData = [[x1,y1,x2,y2]];
 
-      svg.select('path.target')
-          .datum([{date:new Date('2016-06-01 00:00:00'),runningTotal:0},{date:new Date('2016-06-30 00:00:00'),runningTotal:12000211.00}])
-          .attr("d", line);
+    var projection = y2;
+    
 
-      var bars = svg.selectAll(".bar").data(data);
-      bars.enter().append("rect")
-        .attr("class", "bar");
-      bars.attr("x", function(d) { return x(d.date); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.total); })
-        .attr("height", function(d) { return height - y(d.total); });
-      // bars.remove();
+    var trendline = svg.selectAll(".trendline")
+      .data(trendData);
+
+    trendline.enter()
+      .append("line")
+      .attr("class", "trendline")
+      .attr("x1", function(d) { return x(d[0]); })
+      .attr("y1", function(d) { return y(d[1]); })
+      .attr("x2", function(d) { return x(d[2]); })
+      .attr("y2", function(d) { return y(d[3]); })
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+
+    svg.select("g.x.axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.select('g.y.axis')
+        .call(yAxis)
+      .select("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Revenue");
+
+    svg.select('path.line')
+        .datum(data)
+        .attr("d", line);
+
+    svg.select('path.area')
+        .datum(data)
+        .attr("d", area);
+
+    svg.select('path.target')
+        .datum([{date:new Date('2016-06-01 00:00:00'),runningTotal:0},{date:new Date('2016-06-30 00:00:00'),runningTotal:12000211.00}])
+        .attr("d", line);
+
+    var bars = svg.selectAll(".bar").data(data);
+    bars.enter().append("rect")
+      .attr("class", "bar");
+    bars.attr("x", function(d) { return x(d.date); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.total); })
+      .attr("height", function(d) { return height - y(d.total); });
+    // bars.remove();
 
   }
 
