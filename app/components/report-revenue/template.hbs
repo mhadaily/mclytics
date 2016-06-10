@@ -38,9 +38,9 @@
         </div>
         <ul class="list-group list-group-flush">
           {{#each department.products as |product| }}
-            <li class="list-group-item">
-              <strong>{{format-number product.total format=",0.00"}}</strong>
-              <br /> {{product.name}}
+              <li class="list-group-item {{if (eq product.total 0) "zero"}}">
+            <strong>{{format-number product.total format=",0.00"}}</strong>
+            <br /> {{product.name}}
             </li>
           {{/each}}
         </ul>
