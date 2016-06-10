@@ -7,17 +7,17 @@ import ResizeAware from 'ember-resize/mixins/resize-aware';
 function leastSquares(xSeries, ySeries) {
   var reduceSumFunc = function(prev, cur) { return prev + cur; };
 
-  var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
-  var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+  var xBar = xSeries.reduce(reduceSumFunc,0) * 1.0 / xSeries.length;
+  var yBar = ySeries.reduce(reduceSumFunc,0) * 1.0 / ySeries.length;
 
   var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
-    .reduce(reduceSumFunc);
+    .reduce(reduceSumFunc,0);
 
   var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
-    .reduce(reduceSumFunc);
+    .reduce(reduceSumFunc,0);
 
   var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
-    .reduce(reduceSumFunc);
+    .reduce(reduceSumFunc,0);
 
   var slope = ssXY / ssXX;
   var intercept = yBar - (xBar * slope);
@@ -29,9 +29,15 @@ function leastSquares(xSeries, ySeries) {
 
 export default Ember.Component.extend(ResizeAware, {
 
+  target: null,
+
   // debouncedDidResize() {
   //   this.update();
   // },
+
+  dataChanged: Ember.observer('data',function() {
+    this.update();
+  }),
 
   didResize() {
     this.update();
@@ -112,12 +118,15 @@ export default Ember.Component.extend(ResizeAware, {
 
     var data = this.get('data');
 
-    var xRange = d3.time.day.range(new Date('2016-05-31 00:00:00'), d3.time.month.ceil(new Date()))
+    var xRange = d3.time.day.range(
+      d3.min(data, function(d) { return d.date; }),
+      d3.time.month.ceil(d3.max(data, function(d) { return d.date; }))
+    );
     // x.domain(data.map(function(d) { return d.date; }));
     // x.domain(data.map(function(d) { return d.date; }));
     x.domain(xRange);
     // y.domain([0, d3.max(data, function(d) { return d.runningTotal; })]);
-    y.domain([0, 12000211.00]);
+    y.domain([0, this.get('target')]);
 
 
     var xSeries = d3.range(1,data.length+1).slice(0,-1);
@@ -135,7 +144,7 @@ export default Ember.Component.extend(ResizeAware, {
     var trendData = [[x1,y1,x2,y2]];
 
     var projection = y2;
-    
+
 
     var trendline = svg.selectAll(".trendline")
       .data(trendData);
@@ -173,7 +182,10 @@ export default Ember.Component.extend(ResizeAware, {
         .attr("d", area);
 
     svg.select('path.target')
-        .datum([{date:new Date('2016-06-01 00:00:00'),runningTotal:0},{date:new Date('2016-06-30 00:00:00'),runningTotal:12000211.00}])
+        .datum([
+          { date: moment(this.get('selectedMonth')).startOf('month').toDate(), runningTotal: 0},
+          { date: moment(this.get('selectedMonth')).endOf('month').startOf('day').toDate(), runningTotal: this.get('target')}
+        ])
         .attr("d", line);
 
     var bars = svg.selectAll(".bar").data(data);
@@ -183,7 +195,8 @@ export default Ember.Component.extend(ResizeAware, {
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.total); })
       .attr("height", function(d) { return height - y(d.total); });
-    // bars.remove();
+
+    bars.exit().remove();
 
   }
 

@@ -1,2 +1,27 @@
-{{report-revenue departments=model.departments product=model.products data=model.journalEntries}}
+<div class="container-fluid">
+  <div class="m-t-1">
+    <strong>Select Channel: </strong>
+    {{link-to 'All channels' 'index' (query-params department_id="")}}
+    {{#each model.departments as |department|}}
+      - {{link-to department.name 'index' (query-params department_id=department.id)}}
+    {{/each}}
+  </div>
+  <div class="m-t-1">
+    <strong>Select Month</strong>
+    {{#each months as |month|}}
+    {{#if (eq month date)}}
+      - <strong>{{link-to (moment-format month 'MMM') 'index' (query-params date=(moment-format month "Y-M-D"))}}</strong>
+    {{else}}
+    - {{link-to (moment-format month 'MMM') 'index' (query-params date=(moment-format month "Y-M-D"))}}
+    {{/if}}
+    {{/each}}
+  </div>
+</div>
+{{report-revenue
+  selectedDepartment=department
+  selectedMonth=selectedMonth
+  departments=model.departments
+  products=model.products
+  data=model.journalEntries
+}}
 {{outlet}}

@@ -1,20 +1,32 @@
-<div class="container-fluid">
-  <div class="card-group m-t-1">
-    {{#each departmentGroup as |department|}}
-    <div class="card card-block">
-        {{department.name}}
-    </div>
-    {{/each}}
-  </div>
+<div class="container-fluid m-t-1">
+  <h2>{{or selectedDepartment.name 'Group'}} Revenue {{moment-format selectedMonth 'MMMM YYYY'}}</h2>
   <div class="row m-t-1">
     <div class="col-sm-9">
-      <div class="card card-block">{{graph-bar data=totalsByDate departments=departments}}</div>
+      <div class="card card-block">
+        {{graph-bar
+          data=totalsByDate
+          departments=departments
+          selectedMonth=selectedMonth
+          selectedDepartment=selectedDepartment
+          target=target
+        }}
+      </div>
     </div>
     <div class="col-sm-3">
-      <div class="card card-block">
-        <h1>{{format-number total format="(,0.00)"}}</h1>
-        Grand Total
-      </div>
+      <ul class="list-group">
+        <li class="list-group-item text-xs-right">
+          <h1>{{format-number total format="(,0.00)"}}</h1>
+          Monthly Total
+        </li>
+        <li class="list-group-item text-xs-right">
+          <h2>{{format-number projection format=",0.00"}}</h2>
+          Monthly Projected
+        </li>
+        <li class="list-group-item text-xs-right">
+          <h2>{{format-number target format=",0.00"}}</h2>
+          Monthly Target
+        </li>
+      </ul>
     </div>
   </div>
   <div class="card-group m-t-1">
