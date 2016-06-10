@@ -6,5 +6,6 @@ export default DS.Model.extend({
   department: DS.belongsTo(),
   date: DS.attr(),
   interval: DS.attr(),
-  amount: DS.attr()
+  amount: DS.attr(),
+  productGroup: DS.attr()
 });
