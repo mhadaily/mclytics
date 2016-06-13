@@ -48,4 +48,25 @@
   {{/each}}
 </div>
 
+<div class="card-group m-t-1">
+  {{#each groupsGroup as |group| }}
+    <div class="card">
+      <div class="card-block">
+        <h4 class="list-group-item-heading">$ {{format-number group.value.amount format="(,0.00)"}}</h4>
+        <h4 class="list-group-item-heading">unit(s): {{format-number group.value.count format="(,0)"}}</h4>
+        <p class="list-group-item-text">{{group.name}}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        {{#each group.departments as |product| }}
+          <li class="list-group-item {{if (eq product.value.count 0) "zero"}}">
+            <strong>$ {{format-number product.value.amount format=",0.00"}}</strong><br />
+            <strong>{{format-number product.value.count format=",0"}}</strong> unit(s)
+            <br /> {{product.key}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/each}}
+</div>
+
 {{yield}}

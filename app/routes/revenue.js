@@ -21,6 +21,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
         });
       }),
       departments: this.store.findAll('department'),
+      products: this.store.findAll('product'),
       targets: this.store.findAll('target')
     });
   }

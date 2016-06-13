@@ -85,7 +85,7 @@ export default Ember.Component.extend({
   }),
 
   groups: Ember.computed('entries', function() {
-    return this.get('entries').dimension(d => {return d.product.product_group;});
+    return this.get('entries').dimension(d => {return d.product.product_group || 'No Group';});
   }),
 
   departments: Ember.computed('entries', function() {
@@ -102,14 +102,33 @@ export default Ember.Component.extend({
     }),true);
   }),
 
-  departmentsGroup: Ember.computed('entries', 'selectedDepartment',function() {
+  departmentsGroup: Ember.computed('entries',function() {
     let runningAmount = 0, runningCount = 0;
     this.get('dates').filterAll();
+    this.get('departments').filterAll();
+    this.get('groups').filterAll();
     return Ember.copy(this.get('departments').group().reduce(add,del,init).all().map(d => {
-
       this.get('departments').filter(d.key);
       d.name = this.get('store').peekRecord('department',d.key).get('name');
       d.products = Ember.copy(this.get('groups').group().reduce(add,del,init).all(),true);
+      d.value.runningAmount = runningAmount += d.value.amount;
+      d.value.runningCount = runningCount += d.value.count;
+      return d;
+    }),true);
+  }),
+
+  groupsGroup: Ember.computed('entries',function() {
+    let runningAmount = 0, runningCount = 0;
+    this.get('dates').filterAll();
+    this.get('departments').filterAll();
+    this.get('groups').filterAll();
+    return Ember.copy(this.get('groups').group().reduce(add,del,init).all().map(d => {
+      this.get('groups').filter(d.key);
+      d.name = d.key
+      d.departments = Ember.copy(this.get('departments').group().reduce(add,del,init).all().map(d=>{
+        d.name = this.get('store').peekRecord('department',d.key).get('name');
+        return d;
+      }),true);
       d.value.runningAmount = runningAmount += d.value.amount;
       d.value.runningCount = runningCount += d.value.count;
       return d;
