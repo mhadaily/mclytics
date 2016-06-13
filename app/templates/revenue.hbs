@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <ul class="nav nav-pills m-t-1">
+    <li class="nav-item">
+      {{link-to 'All channels' 'revenue' (query-params department=null) class=(if (eq department null) "nav-link activ" "nav-link")}}
+    </li>
+    {{#each model.departments as |d|}}
+    <li class="nav-item">
+      {{link-to d.name 'revenue' (query-params department=d.id) class=(if (eq department d.id) "nav-link activ" "nav-link")}}
+    </li>
+    {{/each}}
+  </ul>
+  <ul class="nav nav-pills m-t-1">
+    {{#each months as |month|}}
+      <li class="nav-item">
+        {{link-to
+          (moment-format month 'MMM') 'revenue'
+          (query-params date=(moment-format month "Y-M-D"))
+          class=(if (eq selectedMonth month) "nav-link active" "nav-link")
+        }}
+      </li>
+    {{/each}}
+  </ul>
+  {{cross-filter data=model targets=model.targets selectedMonth=selectedMonth selectedDepartment=selectedDepartment}}
+</div>
+{{outlet}}

@@ -43,6 +43,13 @@ module.exports = function(environment) {
 
   }
 
+  ENV.resizeServiceDefaults = {
+    debounceTimeout    : 200,
+    heightSensitive    : true,
+    widthSensitive     : true,
+    injectionFactories : [ 'view', 'component']
+  }
+
   ENV.apiHost = process.env.API_HOST || 'mobecentral.herokuapp.com'
   ENV.apiPort = process.env.API_PORT ? ':' + process.env.API_PORT : ''
   ENV.apiProtocol = process.env.API_PROTOCOL ? `${process.env.API_PROTOCOL}://` : (environment == 'production' ? 'https://' : 'http://')

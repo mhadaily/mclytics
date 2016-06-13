@@ -26,7 +26,7 @@ $list-group-border-color: rgba($brand-primary,.5);
 
 $navbar-dark-color:                 white;
 $navbar-dark-hover-color:           rgba($brand-primary,.75);
-$navbar-dark-active-color:          rgba($brand-primary, 1);
+$navbar-dark-active-color:          rgba(white, 1);
 $navbar-dark-disabled-color:        rgba($brand-primary,.25);
 
 @import 'bootstrap';
@@ -42,4 +42,10 @@ body {
 }
 .zero {
   color: rgba(0, 0, 0, 0.3);
+}
+.d3-tip {
+  background-color: rgba(white,.5);
+  padding: 3px 12px;
+  border-radius: 2px;
+  border: thin solid gray;
 }

@@ -1,8 +1,6 @@
 import Ember from 'ember';
 import d3 from 'd3';
 
-var amount = function(d) { return d.amount; };
-
 function leastSquares(xSeries,ySeries) {
 
   var reduceSumFunc = function(prev, cur) { return prev + cur; };
@@ -68,17 +66,17 @@ export default Ember.Component.extend({
       ySeries = this.get('totalsByDate').slice(0,-1).map(function(d) {return d.runningTotal;}),
       leastSquaresCoeff = leastSquares(xSeries,ySeries);
 
-    return leastSquaresCoeff[0] * 30 + leastSquaresCoeff[1]
+    return leastSquaresCoeff[0] * 30 + leastSquaresCoeff[1];
   }),
 
   target: Ember.computed('data', function() {
-    let targets = {}
+    let targets = {};
 
     targets[new Date('2016-06-01 00:00:00')] = {
       "null": 12000211.00
-    }
+    };
 
-    return 12000211.00
+    return 12000211.00;
   }),
 
   total: Ember.computed('entries', 'selectedDepartment', 'selectedMonth', function() {
@@ -91,7 +89,7 @@ export default Ember.Component.extend({
 
   actions: {
     selectDepartment(department) {
-      this.set('selectedDepartment', department)
+      this.set('selectedDepartment', department);
     }
   },
 
@@ -112,7 +110,7 @@ export default Ember.Component.extend({
   }),
 
   groupDimension: Ember.computed('entries',function() {
-    return this.get('entries').dimension(function(d) { return d.product.product_group ? d.product.product_group : 'no group' });
+    return this.get('entries').dimension(function(d) { return d.product.product_group ? d.product.product_group : 'no group'; });
   }),
 
   departmentGroup: Ember.computed('entries', function() {
@@ -135,7 +133,6 @@ export default Ember.Component.extend({
   }),
 
   totalsByDepartment: Ember.computed('amountSumByDepartement', function(){
-    var departments = this.get('departments');
 
     return this.get('amountSumByDepartement').all().map(d => {
       this.get('dateDimension').filterAll();
@@ -145,7 +142,7 @@ export default Ember.Component.extend({
         return {
           name: d.key,
           total: d.value
-        }
+        };
       });
 
       return {
@@ -164,16 +161,16 @@ export default Ember.Component.extend({
     return this.get('dateDimension').group().all().map(d => {
 
       this.get('dateDimension').filter(d.key);
-      var total = this.get('entries').groupAll().reduceSum(function(d){return d.amount}).value();
+      var total = this.get('entries').groupAll().reduceSum(function(d){return d.amount;}).value();
       this.get('dateDimension').filterRange([d3.time.month(d.key),d.key]);
-      var runningTotal = total + this.get('entries').groupAll().reduceSum(function(d){return d.amount}).value();
+      var runningTotal = total + this.get('entries').groupAll().reduceSum(function(d){return d.amount;}).value();
 
       return {
         date: d.key,
         count: d.value,
         total: total,
         runningTotal: runningTotal
-      }
+      };
     });
   }),
 

@@ -1,0 +1,51 @@
+<h2 class="m-t-1">
+  {{or selectedDepartment.name "All channels"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}
+</h2>
+<div class="card-group m-t-1">
+  <div class="card card-block">
+    <h4>${{format-number totalAmount format="(,0)"}}</h4> Total
+  </div>
+  <div class="card card-block">
+    <h4>{{format-number totalCount format="(,0)"}}</h4> Unit(s) Sold
+  </div>
+  <div class="card card-block">
+    <h4>{{format-number projection format="(,0)"}}</h4> Projection
+  </div>
+  <div class="card card-block">
+    <h4>{{if target.amount (format-number target.amount format="(,0)") 'N/A'}}</h4> Target
+  </div>
+  <div class="card card-block">
+    <h4>{{if target.amount (format-number percentToTarget format="(,0.00%)") 'N/A' }}</h4> % to Target
+  </div>
+</div>
+<h3 class="m-t-1">Daily Accummulated</h3>
+<div>
+  {{graph-month data=datesGroup target=target.amount}}
+</div>
+<h3 class="m-t-1">Daily</h3>
+<div>
+  {{graph-daily data=datesGroup target=target.amount}}
+</div>
+
+<div class="card-group m-t-1">
+  {{#each departmentsGroup as |department| }}
+    <div class="card">
+      <div class="card-block">
+        <h4 class="list-group-item-heading">$ {{format-number department.value.amount format="(,0.00)"}}</h4>
+        <h4 class="list-group-item-heading">unit(s): {{format-number department.value.count format="(,0)"}}</h4>
+        <p class="list-group-item-text">{{department.name}}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        {{#each department.products as |product| }}
+          <li class="list-group-item {{if (eq product.value.count 0) "zero"}}">
+            <strong>$ {{format-number product.value.amount format=",0.00"}}</strong><br />
+            <strong>{{format-number product.value.count format=",0"}}</strong> unit(s)
+            <br /> {{product.key}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/each}}
+</div>
+
+{{yield}}
