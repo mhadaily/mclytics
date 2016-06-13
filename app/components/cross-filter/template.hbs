@@ -31,7 +31,7 @@
   </div>
   <div class="col-lg-6 col-md-7">
     <div class="card">
-      <table class="table table-striped table-condensed">
+      <table class="table table-striped table-sm">
         <thead>
           <tr>
             <th>Product</th>
@@ -45,7 +45,7 @@
             <tr>
               <td>{{group.name}}</td>
               {{#each group.departments as |department| }}
-                <td>
+                <td class="{{if (eq department.value.count 0) "zero"}}">
                   <strong>$ {{format-number department.value.amount format=",0.00"}}</strong>
                   <br />
                   <strong>{{format-number department.value.count format=",0"}}</strong> unit(s)
