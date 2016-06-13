@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <ul class="nav nav-pills m-t-1">
     <li class="nav-item">
-      {{link-to 'All channels' 'revenue' (query-params department=null) class=(if (eq department null) "nav-link activ" "nav-link")}}
+      {{link-to 'Group' 'revenue' (query-params department=null) class=(if (eq department null) "nav-link activ" "nav-link")}}
     </li>
     {{#each model.departments as |d|}}
     <li class="nav-item">
