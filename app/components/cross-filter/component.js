@@ -65,6 +65,8 @@ export default Ember.Component.extend({
 
   totalAmount: Ember.computed('entries','selectedDepartment', function() {
     this.get('departments').filter(this.get('selectedDepartment.id'));
+    this.get('dates').filterAll();
+    this.get('groups').filterAll();
     return this.get('entries').groupAll().reduceSum(function(d){return d.amount;}).value();
   }),
 
