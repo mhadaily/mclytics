@@ -4,6 +4,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import d3 from 'd3';
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
+  beforeModel() {
+    this.transitionTo('revenue');
+  },
   queryParams: {
     date: { refreshModel: true },
     department_id: { refreshModel: true }
