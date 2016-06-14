@@ -38,7 +38,11 @@ export default Ember.Component.extend(ResizeAware, {
         .append("text");
 
       svg.append('path')
+        .attr("class", "line")
+      svg.append('path')
         .attr("class", "area")
+      svg.append('path')
+        .attr("class", "target")
 
       var tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -71,8 +75,8 @@ export default Ember.Component.extend(ResizeAware, {
               .tickFormat(function(d){return numeral(d).format('0.0a');});
 
           var line = d3.svg.line()
-              .x(function(d) { return x(d.date); })
-              .y(function(d) { return y(d.runningTotal); });
+              .x(function(d) { return x(d.key) + x.rangeBand() / 2; })
+              .y(function(d) { return y(d.value); });
 
           var area = d3.svg.area()
               .x(function(d) { return x(d.key) + x.rangeBand() / 2; })
@@ -93,7 +97,7 @@ export default Ember.Component.extend(ResizeAware, {
           x.domain(xRange);
           // y.domain([0, d3.max(data, function(d) { return d.runningTotal; })]);
           // y.domain([0, d3.max(data, function(d) { return d.value.amount; })]);
-          y.domain([0, d3.max([this.get('dailyTarget'),500000])]);
+          y.domain([0, d3.max([this.get('dailyTarget'),450000])]);
           // y.domain([0, this.get('target')]);
 
           svg.select("g.x.axis")
@@ -108,6 +112,13 @@ export default Ember.Component.extend(ResizeAware, {
               .attr("dy", ".71em")
               .style("text-anchor", "end")
               .text("Revenue");
+
+          svg.select('path.target')
+                .datum([{key: xRange[0],value: this.get('targetDaily') || 0},{key: xRange[xRange.length - 1], value: this.get('targetDaily') || 0}])
+              .transition()
+              .duration(200)
+              .ease("quad")
+                .attr("d", line);
 
           svg.select('path.area')
                 .datum([{key: xRange[0],value: this.get('targetDaily') || 0},{key: xRange[xRange.length - 1], value: this.get('targetDaily') || 0}])
