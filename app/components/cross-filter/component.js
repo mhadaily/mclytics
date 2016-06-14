@@ -50,7 +50,8 @@ export default Ember.Component.extend({
     daysInMonth = moment(this.get('selectedMonth')).daysInMonth(),
     totalAmount = this.get('totalAmount');
 
-    return (totalAmount / Math.max(0, numDays - 0.5)) * daysInMonth;
+    // return (totalAmount / Math.max(0, numDays - 0.5)) * daysInMonth;
+    return (totalAmount / Math.max(0, numDays - 1.5)) * 30.5;
 
   }),
 
