@@ -1,37 +1,36 @@
-<h2 class="m-t-1">
-  {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}
-</h2>
-<div class="card-group m-t-1">
-  <div class="card card-block">
-    <h4>${{format-number totalAmount format="(,0)"}}</h4> Total
-  </div>
-  <div class="card card-block">
-    <h4>{{format-number totalCount format="(,0)"}}</h4> Unit(s) Sold
-  </div>
-  <div class="card card-block">
-    <h4>{{format-number projection format="(,0)"}}</h4> Projection
-  </div>
-  <div class="card card-block">
-    <h4>{{if target.amount (format-number target.amount format="(,0)") 'N/A'}}</h4> Target
-  </div>
-  <div class="card card-block">
-    <h4>{{if target.amount (format-number percentToTarget format="(,0.00%)") 'N/A' }}</h4> % to Target
-  </div>
-</div>
 <div class="row m-t-1">
   <div class="col-lg-6 col-md-5">
-    <h3>Daily Accummulated</h3>
+    <h4>
+      {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}
+    </h4>
+    <div class="card-group m-t-1">
+      <div class="card card-block">
+        <h5>${{format-number totalAmount format="(,0)"}}</h5> Total
+      </div>
+      <div class="card card-block">
+        <h5>{{format-number totalCount format="(,0)"}}</h5> Unit(s) Sold
+      </div>
+      <div class="card card-block">
+        <h5>{{format-number projection format="(,0)"}}</h5> Projection
+      </div>
+      <div class="card card-block">
+        <h5>{{if target.amount (format-number target.amount format="(,0)") 'N/A'}}</h5> Target
+      </div>
+      <div class="card card-block">
+        <h5>{{if target.amount (format-number percentToTarget format="(,0.00%)") 'N/A' }}</h5> % to Target
+      </div>
+    </div>
+    <h6 class="m-t-1">Daily Accummulated</h6>
     <div>
       {{graph-month data=datesGroup target=target.amount}}
     </div>
-    <h3 class="m-t-1">Daily</h3>
+    <h6 class="m-t-1">Daily</h6>
     <div>
       {{graph-daily data=datesGroup target=target.amount}}
     </div>
   </div>
   <div class="col-lg-6 col-md-7">
-    <div class="card">
-      <table class="table table-striped table-sm">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th>Product</th>
@@ -41,21 +40,28 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>All Product</td>
+            {{#each departmentsGroup as |department| }}
+              <th>
+                {{format-number department.value.amount format=",0"}}&nbsp;($)
+                {{format-number department.value.count format=",0"}}&nbsp;(U)
+              </th>
+            {{/each}}
+          </tr>
           {{#each groupsGroup as |group| }}
             <tr>
               <td>{{group.name}}</td>
               {{#each group.departments as |department| }}
                 <td class="{{if (eq department.value.count 0) "zero"}}">
-                  <strong>$ {{format-number department.value.amount format=",0.00"}}</strong>
-                  <br />
-                  <strong>{{format-number department.value.count format=",0"}}</strong> unit(s)
+                  {{format-number department.value.amount format=",0"}}&nbsp;($)
+                  {{format-number department.value.count format=",0"}}&nbsp;(U)
                 </td>
               {{/each}}
             </tr>
           {{/each}}
         </tbody>
       </table>
-    </div>
   </div>
 </div>
 {{yield}}
