@@ -29,18 +29,27 @@ export default Ember.Component.extend(ResizeAware, {
 
     this.on('didInsertElement',()=>{
 
+      var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .html(function(d) { return numeral(d.value.runningAmount).format('0,0.00'); });
+
       var svg = d3.select(this.element).append('svg').append('g');
       svg.append("g")
         .attr("class", "x axis");
       svg.append("g")
         .attr("class", "y axis")
         .append("text");
+
+      svg.append('path')
+        .attr("class", "line");
+
       svg.append('path')
         .attr("class", "area");
-
-      var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .html(function(d) { return numeral(d.value.runningAmount).format('0,0.00'); });
+      svg.append('path')
+        .attr("class", "target");
+      svg.append('text')
+        .attr("class", "target")
+        .attr("text-anchor", "end");
 
       svg.call(tip);
 
@@ -69,8 +78,8 @@ export default Ember.Component.extend(ResizeAware, {
               .tickFormat(function(d){return numeral(d).format('0.0a');});
 
           var line = d3.svg.line()
-              .x(function(d) { return x(d.date); })
-              .y(function(d) { return y(d.runningTotal); });
+              .x(function(d) { return x(d.key) + x.rangeBand() / 2; })
+              .y(function(d) { return y(d.value); });
 
           var area = d3.svg.area()
               .x(function(d) { return x(d.key) + x.rangeBand() / 2; })
@@ -107,10 +116,20 @@ export default Ember.Component.extend(ResizeAware, {
               .style("text-anchor", "end")
               .text("Revenue");
 
-          svg.select('path.area')
+
+          svg.select('path.target')
                 .datum([{key: xRange[0],value: 0},{key: xRange[xRange.length - 1], value: this.get('target') || 0}])
               .transition().duration(200).ease("quad")
-                .attr("d", area);
+                .attr("d", line);
+          svg.select('path.area')
+              .datum([{key: xRange[0],value: 0},{key: xRange[xRange.length - 1], value: this.get('target') || 0}])
+            .transition().duration(200).ease("quad")
+              .attr("d", area);
+          svg.select('text.target')
+            .transition().duration(200).ease("quad")
+              .attr('x', x(xRange[xRange.length - 1]))
+              .attr('y', y(this.get('target')) || 0)
+              .text(this.get('target') ? 'Target ' + numeral(this.get('target')).format('0,0.00') : 'Target N/A')
 
           var bars = svg.selectAll(".bar").data(data);
 
