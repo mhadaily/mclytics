@@ -38,6 +38,10 @@
   stroke: green;
   stroke-width: 1.5px;
 }
+text.target {
+  stroke: none;
+  fill: green;
+}
 .area {
   fill: pink;
   stroke: none;

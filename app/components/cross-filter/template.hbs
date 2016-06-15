@@ -1,5 +1,5 @@
 <div class="row m-t-1">
-  <div class="col-lg-6 col-md-5">
+  <div class="col-lg-6">
     <h4>
       {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}
     </h4>
@@ -29,39 +29,40 @@
       {{graph-daily data=datesGroup target=target.amount leastSquaresCoeff=leastSquaresCoeff}}
     </div>
   </div>
-  <div class="col-lg-6 col-md-7">
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr>
-            <th>Product</th>
-            {{#each departmentsGroup as |department| }}
-              <th>{{department.name}}</th>
-            {{/each}}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>All Product</td>
-            {{#each departmentsGroup as |department| }}
-              <th>
-                {{format-number department.value.amount format=",0"}}&nbsp;($)
-                {{format-number department.value.count format=",0"}}&nbsp;(U)
-              </th>
-            {{/each}}
-          </tr>
-          {{#each groupsGroup as |group| }}
-            <tr>
-              <td>{{group.name}}</td>
-              {{#each group.departments as |department| }}
-                <td class="{{if (eq department.value.count 0) "zero"}}">
-                  {{format-number department.value.amount format=",0"}}&nbsp;($)
-                  {{format-number department.value.count format=",0"}}&nbsp;(U)
-                </td>
-              {{/each}}
-            </tr>
+  <div class="col-lg-6">
+<div class="table-responsive">
+  <table class="table table-hover table-sm">
+    <thead>
+      <tr>
+        <th>Product</th>
+        {{#each departmentsGroup as |department| }}
+          <th>{{department.name}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>All Product</th>
+        {{#each departmentsGroup as |department| }}
+          <td>
+            {{format-number department.value.amount format=",0"}}&nbsp;($)
+            {{format-number department.value.count format=",0"}}&nbsp;(U)
+          </td>
+        {{/each}}
+      </tr>
+      {{#each groupsGroup as |group| }}
+        <tr>
+          <th>{{group.name}}</th>
+          {{#each group.departments as |department| }}
+            <td class="{{if (eq department.value.count 0) "zero"}}">
+              {{format-number department.value.amount format=",0"}}&nbsp;($)
+              {{format-number department.value.count format=",0"}}&nbsp;(U)
+            </td>
           {{/each}}
-        </tbody>
-      </table>
-  </div>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  </div>  </div>
 </div>
 {{yield}}
