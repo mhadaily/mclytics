@@ -51,6 +51,13 @@ export default Ember.Component.extend({
 
   }),
 
+  leastSquaresCoeff: Ember.computed('datesGroup','selectedDepartment', 'selectedMonth',function() {
+    var xSeries = d3.range(1,this.get('datesGroup').length),
+      ySeries = this.get('datesGroup').slice(0,-1).map(function(d) {return d.value.amount;}),
+      leastSquaresCoeff = leastSquares(xSeries,ySeries);
+    return leastSquaresCoeff;
+  }),
+
   percentToTarget: Ember.computed('target','totalAmount',function() {
     let numDays = this.get('datesGroup').length,
     daysInMonth = moment(this.get('selectedMonth')).daysInMonth(),

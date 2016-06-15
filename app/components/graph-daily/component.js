@@ -32,17 +32,24 @@ export default Ember.Component.extend(ResizeAware, {
       var svg = d3.select(this.element).append('svg').append('g');
       svg.append("g")
         .attr("class", "x axis");
-
       svg.append("g")
         .attr("class", "y axis")
         .append("text");
 
       svg.append('path')
-        .attr("class", "line")
+        .attr("class", "line");
       svg.append('path')
-        .attr("class", "area")
+        .attr("class", "area");
       svg.append('path')
-        .attr("class", "target")
+        .attr("class", "target");
+
+      svg.append("g")
+        .attr("class", "bars")
+
+
+      // svg.append("line")
+      //   .attr("class", "trendline");
+
 
       var tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -100,6 +107,19 @@ export default Ember.Component.extend(ResizeAware, {
           y.domain([0, d3.max([this.get('dailyTarget'),450000])]);
           // y.domain([0, this.get('target')]);
 
+          var leastSquaresCoeff = this.get('leastSquaresCoeff');
+          // apply the reults of the least squares regression
+          var x1 = xRange[0];
+          var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
+          // var x2 = data[data.length - 1].date;
+          var x2 = xRange[xRange.length - 1]
+          // var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+          var y2 = leastSquaresCoeff[0] * 30 + leastSquaresCoeff[1];
+          var trendData = [[x1,y1,x2,y2]];
+
+          var trendline = svg.selectAll(".trendline")
+            .data(trendData);
+
           svg.select("g.x.axis")
               .attr("transform", "translate(0," + height + ")")
               .call(xAxis);
@@ -119,7 +139,6 @@ export default Ember.Component.extend(ResizeAware, {
               .duration(200)
               .ease("quad")
                 .attr("d", line);
-
           svg.select('path.area')
                 .datum([{key: xRange[0],value: this.get('targetDaily') || 0},{key: xRange[xRange.length - 1], value: this.get('targetDaily') || 0}])
               .transition()
@@ -127,21 +146,30 @@ export default Ember.Component.extend(ResizeAware, {
               .ease("quad")
                 .attr("d", area);
 
-          var bars = svg.selectAll(".bar").data(data);
+          var bars = svg.select('.bars').selectAll(".bar").data(data);
           bars.enter().append("rect")
             .attr("class", "bar")
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
-
           bars
-            .transition()
-            .duration(200)
-            .ease("quad")
+            .transition().duration(200).ease("quad")
               .attr("x", function(d) { return x(d.key); })
               .attr("width", x.rangeBand())
               .attr("y", function(d) { return y(d.value.amount); })
               .attr("height", function(d) { return height - y(d.value.amount); });
           bars.exit().remove();
+
+          // svg.select('line.trendline')
+          var trendlines = svg.selectAll(".trendline").data(trendData);
+          trendlines.enter().append('line')
+            .attr("class","trendline");
+          trendlines
+            .transition().duration(200).ease("quad")
+              .attr("x1", function(d) { return x(d[0]) + x.rangeBand() / 2; })
+              .attr("y1", function(d) { return y(d[1]); })
+              .attr("x2", function(d) { return x(d[2]) + x.rangeBand() / 2; })
+              .attr("y2", function(d) { return y(d[3]); });
+          trendlines.exit().remove();
 
         }
 
