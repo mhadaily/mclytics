@@ -8,12 +8,12 @@ export default Ember.Controller.extend({
   date: null,
   department: null,
   months: [
-    new Date('2016-01-01 00:00:00'),
-    new Date('2016-02-01 00:00:00'),
-    new Date('2016-03-01 00:00:00'),
-    new Date('2016-04-01 00:00:00'),
-    new Date('2016-05-01 00:00:00'),
-    new Date('2016-06-01 00:00:00'),
+    new Date(2016,0,1),
+    new Date(2016,1,1),
+    new Date(2016,2,1),
+    new Date(2016,3,1),
+    new Date(2016,4,1),
+    new Date(2016,5,1)
   ],
   selectedMonth: Ember.computed('date',function(){
     return this.get('date') && dateParser(this.get('date')) || d3.time.month(new Date());
