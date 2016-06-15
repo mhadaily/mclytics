@@ -155,9 +155,7 @@ export default Ember.Component.extend(ResizeAware, {
       .attr("x1", function(d) { return x(d[0]); })
       .attr("y1", function(d) { return y(d[1]); })
       .attr("x2", function(d) { return x(d[2]); })
-      .attr("y2", function(d) { return y(d[3]); })
-      .attr("stroke", "black")
-      .attr("stroke-width", 1);
+      .attr("y2", function(d) { return y(d[3]); });
 
 
     svg.select("g.x.axis")
