@@ -13,9 +13,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   },
   model(params) {
     return Ember.RSVP.hash({
-      data: Ember.$.getJSON(`${config.apiUrl}/api/journal_entries`, params).then(data => {
+      data: Ember.$.getJSON(`${config.apiUrl}/api/sales_orders`, params).then(data => {
         return data.map(function(d) {
-          d.date = dateParser(d.date);
+          // d.date = dateParser(d.date);
+          d.date = new Date(d.date);
           d.amount = Number(d.amount);
           return d;
         });
