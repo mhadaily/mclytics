@@ -25,6 +25,10 @@ export default Ember.Component.extend(ResizeAware,{
 
     this.on('didInsertElement', () => {
 
+      function amountAccessor(d) {
+        return Math.round(d.value.amount * 100) / 100;
+      }
+
       function reduceAdd(p,v) {
         p.quantity += v.quantity;
         p.amount += v.amount;
@@ -32,8 +36,8 @@ export default Ember.Component.extend(ResizeAware,{
       }
 
       function reduceRem(p,v) {
-        p.quantity -= v.quantity;
-        p.amount -= v.amount;
+        p.quantity  -= v.quantity;
+        p.amount    -= v.amount;
         return p;
       }
 
@@ -43,6 +47,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       var currencyFmt = d3.format(",.2f");
       var quantityFmt = d3.format(",f");
+      var labelFmt    = d=>{return `${d.key}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.quantity)})`;}
 
       var monthly = crossfilter(this.data);
 
@@ -54,10 +59,10 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       var amountByDate        = dateDim.group().reduceSum(dc.pluck('amount'));
-      var amountByDepartment  = departmentDim.group().reduceSum(dc.pluck('amount'));
-      var amountByStatus      = statusDim.group().reduceSum(dc.pluck('amount'));
-      var amountByGroup       = groupDim.group().reduceSum(dc.pluck('amount'));
-      var amountByYear        = yearDim.group().reduceSum(dc.pluck('amount'));
+      var amountByDepartment  = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      var amountByStatus      = statusDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      var amountByGroup       = groupDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      var amountByYear        = yearDim.group().reduce(reduceAdd,reduceRem,reduceIni);
 
 
       var totalByDepartment   = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -92,6 +97,8 @@ export default Ember.Component.extend(ResizeAware,{
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(250)
+        .valueAccessor(amountAccessor)
+        .label(labelFmt)
         .dimension(departmentDim)
         .group(amountByDepartment)
         .elasticX(true);
@@ -100,6 +107,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.groupChart = dc.rowChart('#groupChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(500)
+        .valueAccessor(amountAccessor)
         .dimension(groupDim)
         .group(amountByGroup)
         .elasticX(true);
@@ -108,6 +116,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.yearChart = dc.rowChart('#yearChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(250)
+        .valueAccessor(amountAccessor)
         .dimension(yearDim)
         .group(amountByYear)
         .elasticX(true);
@@ -115,6 +124,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .valueAccessor(amountAccessor)
         .dimension(statusDim)
         .group(amountByStatus)
         .elasticX(true);
