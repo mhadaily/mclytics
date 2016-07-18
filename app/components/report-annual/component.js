@@ -107,7 +107,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       this.yearChart = dc.rowChart('#yearChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
-        .height(500)
+        .height(250)
         .dimension(yearDim)
         .group(amountByYear)
         .elasticX(true);
