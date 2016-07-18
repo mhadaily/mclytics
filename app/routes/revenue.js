@@ -2,6 +2,8 @@ import Ember from 'ember';
 import config from '../config/environment';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import d3 from 'd3';
+import universe from 'npm:universe';
+import crossfilter from 'npm:crossfilter2';
 
 let dateParser = d3.time.format('%Y-%m-%d').parse;
 
@@ -14,6 +16,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     return Ember.RSVP.hash({
       data: Ember.$.getJSON(`${config.apiUrl}/api/sales_orders`, params).then(data => {
+        return data.map(function(d) {
+          // d.date = dateParser(d.date);
+          d.date = new Date(d.date);
+          d.amount = Number(d.amount);
+          return d;
+        });
+      }),
+      monthlyData: Ember.$.getJSON(`${config.apiUrl}/api/sales_orders`, Ember.merge(params,{interval:'month',all:1})).then(data => {
         return data.map(function(d) {
           // d.date = dateParser(d.date);
           d.date = new Date(d.date);

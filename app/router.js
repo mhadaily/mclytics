@@ -9,6 +9,7 @@ Router.map(function() {
   this.route('settings');
   this.route('login');
   this.route('revenue');
+  this.route('annual');
 });
 
 export default Router;

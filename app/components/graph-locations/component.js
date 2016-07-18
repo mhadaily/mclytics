@@ -2,17 +2,19 @@ import Ember from 'ember';
 import d3 from 'd3';
 import topojson from 'topojson';
 
+const { $ } = Ember;
+
 export default Ember.Component.extend({
   didInsertElement() {
     d3.csv("https://gist.githubusercontent.com/dnprock/bb5a48a004949c7c8c60/raw/a30283e5eaf43dd2986c3e991ee299521046fc87/population.csv", function(err, data) {
-      var config = { "data0": "Country (or dependent territory)", "data1": "Population", "label0": "label 0", "label1": "label 1", "color0": "#99ccff", "color1": "#0050A1", "width": 800, "height": 400 }
+      var config = { "data0": "Country (or dependent territory)", "data1": "Population", "label0": "label 0", "label1": "label 1", "color0": "#99ccff", "color1": "#0050A1", "width": 800, "height": 400 };
 
       var width = 600,
         height = 300;
 
       var COLOR_COUNTS = 9;
 
-      function Interpolate(start, end, steps, count) {
+      function interpolate(start, end, steps, count) {
         var s = start,
           e = end,
           final = s + (((e - s) / steps) * count);
@@ -75,9 +77,9 @@ export default Ember.Component.extend({
       var colors = [];
 
       for (var i = 0; i < COLOR_COUNTS; i++) {
-        var r = Interpolate(startColors.r, endColors.r, COLOR_COUNTS, i);
-        var g = Interpolate(startColors.g, endColors.g, COLOR_COUNTS, i);
-        var b = Interpolate(startColors.b, endColors.b, COLOR_COUNTS, i);
+        var r = interpolate(startColors.r, endColors.r, COLOR_COUNTS, i);
+        var g = interpolate(startColors.g, endColors.g, COLOR_COUNTS, i);
+        var b = interpolate(startColors.b, endColors.b, COLOR_COUNTS, i);
         colors.push(new Color(r, g, b));
       }
 
@@ -87,7 +89,7 @@ export default Ember.Component.extend({
       var projection = d3.geo.mercator()
         .scale((width + 1) / 2 / Math.PI)
         .translate([width / 2, height / 2])
-        .precision(.1);
+        .precision(0.1);
 
       var path = d3.geo.path()
         .projection(projection);
@@ -116,13 +118,13 @@ export default Ember.Component.extend({
       var quantize = d3.scale.quantize()
         .domain([0, 1.0])
         .range(d3.range(COLOR_COUNTS).map(function(i) {
-          return i }));
+          return i; }));
 
       quantize.domain([d3.min(data, function(d) {
-          return (+d[MAP_VALUE])
+          return (+d[MAP_VALUE]);
         }),
     d3.max(data, function(d) {
-          return (+d[MAP_VALUE])
+          return (+d[MAP_VALUE]);
         })]);
 
       d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/world-topo-min.json", function(error, world) {

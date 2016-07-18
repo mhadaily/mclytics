@@ -4,7 +4,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   session: Ember.inject.service(),
   model: function() {
-    return this.modelFor('application').account
+    return this.modelFor('application').account;
   },
   actions: {
     invalidateSession() {

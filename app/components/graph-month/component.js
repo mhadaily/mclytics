@@ -8,9 +8,9 @@ var timeFormat = d3.time.format.multi([
   // [":%S",   function(d) { return d.getSeconds(); }],
   // ["%I:%M", function(d) { return d.getMinutes(); }],
   // ["%I %p", function(d) { return d.getHours(); }],
-  ["%a", function(d) { return !d.getDay() && d.getDate() != 1; }],
+  ["%a", function(d) { return !d.getDay() && d.getDate() !== 1; }],
   // ["%b %d", function(d) { return d.getDate() != 1; }],
-  ["%d", function(d) { return d.getDate() != 1; }],
+  ["%d", function(d) { return d.getDate() !== 1; }],
   ["%B", function(d) { return d.getMonth(); }],
   ["%Y", function() { return true; }]
 ]);
@@ -61,7 +61,7 @@ export default Ember.Component.extend(ResizeAware, {
             height = Math.max(0, rect.height - margin.top - margin.bottom);
 
           var x = d3.scale.ordinal()
-            .rangeRoundBands([0, width], .1);
+            .rangeRoundBands([0, width], 0.1);
 
           var y = d3.scale.linear()
             .range([height, 0]);
@@ -129,7 +129,7 @@ export default Ember.Component.extend(ResizeAware, {
             .transition().duration(200).ease("quad")
               .attr('x', x(xRange[xRange.length - 1]))
               .attr('y', y(this.get('target')) || 0)
-              .text(this.get('target') ? 'Target ' + numeral(this.get('target')).format('0,0.00') : 'Target N/A')
+              .text(this.get('target') ? 'Target ' + numeral(this.get('target')).format('0,0.00') : 'Target N/A');
 
           var bars = svg.selectAll(".bar").data(data);
 

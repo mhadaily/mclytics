@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import d3 from 'd3';
+import crossfilter from 'npm:crossfilter2';
 
 let dateParser = d3.time.format('%Y-%m-%d').parse;
 
