@@ -51,11 +51,11 @@ export default Ember.Component.extend(ResizeAware,{
 
       var monthly = crossfilter(this.data);
 
-      var dateDim             = monthly.dimension(d=>{return d.date;});
+      var dateDim             = monthly.dimension(d=>{return d3.time.month(d.date);});
       var departmentDim       = monthly.dimension(d=>{return d.department_name;});
       var statusDim           = monthly.dimension(d=>{return d.status;});
       var groupDim            = monthly.dimension(d=>{return d.product_group;});
-      var yearDim             = monthly.dimension(d=>{return d3.time.year(d.date);});
+      var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
 
 
       var amountByDate        = dateDim.group().reduceSum(dc.pluck('amount'));
@@ -108,6 +108,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(500)
         .valueAccessor(amountAccessor)
+        .label(labelFmt)
         .dimension(groupDim)
         .group(amountByGroup)
         .elasticX(true);
@@ -116,6 +117,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.yearChart = dc.rowChart('#yearChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(250)
+        .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(yearDim)
         .group(amountByYear)
@@ -124,6 +126,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(statusDim)
         .group(amountByStatus)
