@@ -46,15 +46,19 @@ export default Ember.Component.extend(ResizeAware,{
 
       var monthly = crossfilter(this.data);
 
-      var dateDim             = monthly.dimension(d=>{return new Date(d.date);});
+      var dateDim             = monthly.dimension(d=>{return d.date;});
       var departmentDim       = monthly.dimension(d=>{return d.department_name;});
       var statusDim           = monthly.dimension(d=>{return d.status;});
       var groupDim            = monthly.dimension(d=>{return d.product_group;});
+      var yearDim             = monthly.dimension(d=>{return d3.time.year(d.date);});
+
 
       var amountByDate        = dateDim.group().reduceSum(dc.pluck('amount'));
       var amountByDepartment  = departmentDim.group().reduceSum(dc.pluck('amount'));
       var amountByStatus      = statusDim.group().reduceSum(dc.pluck('amount'));
       var amountByGroup       = groupDim.group().reduceSum(dc.pluck('amount'));
+      var amountByYear        = yearDim.group().reduceSum(dc.pluck('amount'));
+
 
       var totalByDepartment   = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
 
@@ -100,6 +104,14 @@ export default Ember.Component.extend(ResizeAware,{
         .group(amountByGroup)
         .elasticX(true);
       this.groupChart.xAxis().ticks(5)
+
+      this.yearChart = dc.rowChart('#yearChart')
+        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .height(500)
+        .dimension(yearDim)
+        .group(amountByYear)
+        .elasticX(true);
+      this.yearChart.xAxis().ticks(5)
 
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -148,6 +160,9 @@ export default Ember.Component.extend(ResizeAware,{
 
     rect = document.getElementById('groupChart').parentElement.getBoundingClientRect();
     this.groupChart.width(rect.width)
+
+    rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
+    this.yearChart.width(rect.width)
 
     dc.renderAll();
   },
