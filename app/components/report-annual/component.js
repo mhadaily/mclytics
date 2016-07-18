@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import universe from 'npm:universe';
+import d3 from 'd3';
 import crossfilter from 'npm:crossfilter2';
 import dc from 'npm:dc';
 import ResizeAware from 'ember-resize/mixins/resize-aware';
@@ -42,12 +42,12 @@ export default Ember.Component.extend(ResizeAware,{
       }
 
       function reduceIni() {
-        return {quantity: 0, amount: 0.0}
+        return {quantity: 0, amount: 0.0};
       }
 
       var currencyFmt = d3.format(",.2f");
       var quantityFmt = d3.format(",f");
-      var labelFmt    = d=>{return `${d.key}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.quantity)})`;}
+      var labelFmt    = d=>{return `${d.key}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.quantity)})`;};
 
       var monthly = crossfilter(this.data);
 
@@ -102,7 +102,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(departmentDim)
         .group(amountByDepartment)
         .elasticX(true);
-      this.departmentChart.xAxis().ticks(5)
+      this.departmentChart.xAxis().ticks(5);
 
       this.groupChart = dc.rowChart('#groupChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -112,7 +112,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(groupDim)
         .group(amountByGroup)
         .elasticX(true);
-      this.groupChart.xAxis().ticks(5)
+      this.groupChart.xAxis().ticks(5);
 
       this.yearChart = dc.rowChart('#yearChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -122,7 +122,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(yearDim)
         .group(amountByYear)
         .elasticX(true);
-      this.yearChart.xAxis().ticks(5)
+      this.yearChart.xAxis().ticks(5);
 
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -131,18 +131,18 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(statusDim)
         .group(amountByStatus)
         .elasticX(true);
-      this.statusChart.xAxis().ticks(3)
+      this.statusChart.xAxis().ticks(3);
 
       this.departmentTable = dc.dataTable('#departmentTable')
         .dimension(totalByDepartment)
-        .group(d=>{return 'departments'})
+        .group(()=>{return 'departments';})
         .columns([
           d => { return d.key; },
           d => { return quantityFmt(d.value.quantity); },
           d => { return currencyFmt(d.value.amount); }
         ])
-        .sortBy(function (d) { return d.key })
-        .order(d3.descending)
+        .sortBy(function (d) { return d.key; })
+        .order(d3.descending);
 
       // this.dataTable = dc.dataTable('#dataTable')
       //   .dimension(dateDim)
@@ -163,19 +163,19 @@ export default Ember.Component.extend(ResizeAware,{
 
   update() {
     var rect = document.getElementById('monthlyChart').parentElement.getBoundingClientRect();
-    this.monthlyChart.width(rect.width)
+    this.monthlyChart.width(rect.width);
 
     rect = document.getElementById('departmentChart').parentElement.getBoundingClientRect();
-    this.departmentChart.width(rect.width)
+    this.departmentChart.width(rect.width);
 
     rect = document.getElementById('statusChart').parentElement.getBoundingClientRect();
-    this.statusChart.width(rect.width)
+    this.statusChart.width(rect.width);
 
     rect = document.getElementById('groupChart').parentElement.getBoundingClientRect();
-    this.groupChart.width(rect.width)
+    this.groupChart.width(rect.width);
 
     rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
-    this.yearChart.width(rect.width)
+    this.yearChart.width(rect.width);
 
     dc.renderAll();
   },

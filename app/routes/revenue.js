@@ -1,11 +1,6 @@
 import Ember from 'ember';
 import config from '../config/environment';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import d3 from 'd3';
-import universe from 'npm:universe';
-import crossfilter from 'npm:crossfilter2';
-
-let dateParser = d3.time.format('%Y-%m-%d').parse;
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   queryParams: {
