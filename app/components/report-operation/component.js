@@ -55,7 +55,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       var monthly = crossfilter(this.data);
 
-      var dateDim             = monthly.dimension(d=>{return d3.time.month(d.date);});
+      var dateDim             = monthly.dimension(d=>{return d3.time.day(d.date);});
       var departmentDim       = monthly.dimension(d=>{return d.department_name;});
       var statusDim           = monthly.dimension(d=>{return d.status;});
       var groupDim            = monthly.dimension(d=>{return d.product_group;});
@@ -92,7 +92,7 @@ export default Ember.Component.extend(ResizeAware,{
         .centerBar(false)
         .gap(4)
         .x(d3.time.scale().domain([minDate,maxDate]))
-        .xUnits(d3.time.months)
+        .xUnits(d3.time.days)
         .dimension(dateDim)
         .group(amountByDate)
         .brushOn(true)
