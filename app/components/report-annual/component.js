@@ -45,9 +45,13 @@ export default Ember.Component.extend(ResizeAware,{
         return {quantity: 0, amount: 0.0};
       }
 
-      var currencyFmt = d3.format(",.2f");
+      var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
-      var labelFmt    = d=>{return `${d.key}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.quantity)})`;};
+      var percentageFmt = d3.format(".2%");
+      var labelFmt    = d=>{
+        var percentage = d.value.amount / amountTotal.value();
+        return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
+      };
 
       var monthly = crossfilter(this.data);
 
