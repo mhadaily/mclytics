@@ -1,0 +1,71 @@
+<div class="container-fluid">
+  <div class="row" class="m-t-1 m-b-1">
+    <div class="col-md-4 col-lg-3">
+      <div class="card card-block">
+        <div class="row">
+          <div class="col-sm-6 col-md-12">
+            <h4 id="boxND" class="card-title"></h4>
+            <p class="card-text">Total Amount</p>
+          </div>
+          <div class="col-sm-6 col-md-12">
+            <h4 id="quantityND" class="card-title"></h4>
+            <p class="card-text">Number of Sales</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-7">
+      <div id="monthlyChart">
+        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'monthlyChart'}}>reset</a>
+        <h6>by Month</h6>
+      </div>
+    </div>
+    <div class="col-md-2 col-lg-2">
+      <div id="statusChart">
+        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'statusChart'}}>reset</a>
+        <h6>by Status</h6>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+      <div id="departmentChart">
+        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'departmentChart'}}>reset</a>
+        <h6>by Channels</h6>
+      </div>
+      <table id="departmentTable" class="table table-sm">
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="col-md-3">
+      <div id="groupChart">
+        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'groupChart'}}>reset</a>
+        <h6>by Product Groups</h6>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div id="yearChart">
+        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'yearChart'}}>reset</a>
+        <h6>Year</h6>
+      </div>
+    </div>
+  </div>
+
+  {{!-- <table id="dataTable" class="table table-striped table-sm">
+    <thead>
+      <th>Date</th>
+      <th>Department</th>
+      <th>Group</th>
+      <th>Amount</th>
+    </thead>
+  </table> --}}
+</div>
+{{yield}}

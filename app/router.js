@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('login');
   this.route('revenue');
   this.route('annual');
+  this.route('operation');
 });
 
 export default Router;
