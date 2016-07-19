@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import config from '../config/environment';
 import d3 from 'd3';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model(params) {
     return Ember.$.get(`${config.apiUrl}/analytics/sales_orders.csv`, Ember.merge(params,{interval:'month',all:1})).then(data => {
       return d3.csv.parse(data,d=>{
