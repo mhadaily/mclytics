@@ -1,15 +1,19 @@
 <div class="container-fluid">
-  <div class="row" class="m-t-1 m-b-1">
+  <div class="row m-t-1 m-b-1">
     <div class="col-md-4 col-lg-3">
       <div class="card card-block">
         <div class="row">
-          <div class="col-sm-6 col-md-12">
+          <div class="col-sm-4 col-md-12 m-b-1">
             <h4 id="boxND" class="card-title"></h4>
             <p class="card-text">Total Amount</p>
           </div>
-          <div class="col-sm-6 col-md-12">
+          <div class="col-sm-4 col-md-12 m-b-1">
             <h4 id="quantityND" class="card-title"></h4>
             <p class="card-text">Number of Sales</p>
+          </div>
+          <div class="col-sm-4 col-md-12 m-b-1">
+            <h4 id="projectionND" class="card-title"></h4>
+            <p class="card-text">Projection</p>
           </div>
         </div>
       </div>
@@ -35,7 +39,7 @@
         <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'departmentChart'}}>reset</a>
         <h6>by Channels</h6>
       </div>
-      <table id="departmentTable" class="table table-sm">
+      {{!-- <table id="departmentTable" class="table table-sm">
         <thead>
           <tr>
             <th>Channel</th>
@@ -43,7 +47,7 @@
             <th>Amount</th>
           </tr>
         </thead>
-      </table>
+      </table> --}}
     </div>
     <div class="col-md-3">
       <div id="groupChart">
@@ -52,10 +56,10 @@
       </div>
     </div>
     <div class="col-md-3">
-      <div id="yearChart">
+      {{!-- <div id="yearChart">
         <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'yearChart'}}>reset</a>
         <h6>Year</h6>
-      </div>
+      </div> --}}
     </div>
   </div>
 
