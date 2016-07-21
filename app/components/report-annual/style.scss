@@ -2,6 +2,11 @@ div.dc-chart {
     // float: left;
 }
 
+.dc-chart .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-60deg);
+}
+
 .dc-chart rect.bar {
     stroke: none;
     cursor: pointer;
