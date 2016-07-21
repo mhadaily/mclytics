@@ -1,7 +1,7 @@
 
 // $enable-flex: true;
 
-$brand-primary: steelblue;
+$brand-primary:             steelblue;
 
 $gray-dark:                 $brand-primary;
 $gray:                      darken($brand-primary, 10%);
@@ -25,8 +25,8 @@ $list-group-bg: rgba($body-bg,.25);
 $list-group-border-color: rgba($brand-primary,.5);
 
 $navbar-dark-color:                 white;
-$navbar-dark-hover-color:           rgba($brand-primary,.75);
-$navbar-dark-active-color:          rgba(white, 1);
+$navbar-dark-hover-color:           rgba($navbar-dark-color,.75);
+$navbar-dark-active-color:          rgba($navbar-dark-color, 1);
 $navbar-dark-disabled-color:        rgba($brand-primary,.25);
 
 @import 'bootstrap';
