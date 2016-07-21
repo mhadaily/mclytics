@@ -74,7 +74,7 @@ export default Ember.Component.extend(ResizeAware,{
       var amountTotal         = monthly.groupAll().reduceSum(dc.pluck('amount'));
       var quantityTotal       = monthly.groupAll().reduceSum(dc.pluck('quantity'));
 
-      var minDate = d3.time.month(dateDim.bottom(1)[0].date);
+      var minDate = d3.time.month(moment(dateDim.bottom(1)[0].date).add(-1,'month').toDate());
       var maxDate = d3.time.month.ceil(dateDim.top(1)[0].date);
 
       this.boxND = dc.numberDisplay("#boxND")
@@ -88,8 +88,8 @@ export default Ember.Component.extend(ResizeAware,{
         .group(quantityTotal);
 
       this.monthlyChart = dc.barChart('#monthlyChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 60})
-        .centerBar(false)
+        .margins({top: 10, right: 30, bottom: 40, left: 60})
+        .centerBar(true)
         .gap(4)
         .x(d3.time.scale().domain([minDate,maxDate]))
         .xUnits(d3.time.months)
@@ -97,6 +97,7 @@ export default Ember.Component.extend(ResizeAware,{
         .group(amountByDate)
         .brushOn(true)
         .elasticY(true);
+      this.monthlyChart.xAxis().ticks(d3.time.month, 1);
 
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})

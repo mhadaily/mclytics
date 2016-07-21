@@ -45,6 +45,24 @@ export default Ember.Component.extend(ResizeAware,{
         return {quantity: 0, amount: 0.0};
       }
 
+      function reduceChannelAdd(p,v) {
+        p[v.department_name] = p[v.department_name] || {}
+        p[v.department_name].quantity  = (p[v.department_name].quantity || 0) + v.quantity;
+        p[v.department_name].amount    = (p[v.department_name].amount || 0.0) + v.amount;
+        return p;
+      }
+
+      function reduceChannelRem(p,v) {
+        p[v.department_name] = p[v.department_name] || {}
+        p[v.department_name].quantity  = (p[v.department_name].quantity || 0) - v.quantity;
+        p[v.department_name].amount    = (p[v.department_name].amount || 0.0) - v.amount;
+        return p;
+      }
+
+      function reduceChannelIni() {
+        return {};
+      }
+
       var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
       var percentageFmt = d3.format(".2%");
@@ -62,7 +80,7 @@ export default Ember.Component.extend(ResizeAware,{
       var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
 
 
-      var amountByDate        = dateDim.group().reduceSum(dc.pluck('amount'));
+      var amountByDate        = dateDim.group().reduce(reduceChannelAdd,reduceChannelRem,reduceChannelIni);
       var amountByDepartment  = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByStatus      = statusDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByGroup       = groupDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -74,7 +92,7 @@ export default Ember.Component.extend(ResizeAware,{
       var amountTotal         = monthly.groupAll().reduceSum(dc.pluck('amount'));
       var quantityTotal       = monthly.groupAll().reduceSum(dc.pluck('quantity'));
 
-      var minDate = d3.time.month(dateDim.bottom(1)[0].date);
+      var minDate = d3.time.day(moment(dateDim.bottom(1)[0].date).add(-1,'day').toDate());
       var maxDate = d3.time.month.ceil(dateDim.top(1)[0].date);
 
       this.boxND = dc.numberDisplay("#boxND")
@@ -84,19 +102,38 @@ export default Ember.Component.extend(ResizeAware,{
 
       this.quantityND = dc.numberDisplay("#quantityND")
         .formatNumber(d3.format(",f"))
-        .valueAccessor(function(d){return d;})
+        .valueAccessor(d=>{return d;})
         .group(quantityTotal);
 
+      this.projectionND = dc.numberDisplay("#quantityND")
+        .formatNumber(d3.format(",f"))
+        .valueAccessor(d=>{return d;})
+        .group(amountTotal);
+
       this.monthlyChart = dc.barChart('#monthlyChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 60})
+        .margins({top: 20, right: 30, bottom: 40, left: 60})
         .centerBar(false)
+        .valueAccessor(d=>{return d;})
         .gap(4)
         .x(d3.time.scale().domain([minDate,maxDate]))
         .xUnits(d3.time.days)
         .dimension(dateDim)
-        .group(amountByDate)
+        .centerBar(true)
+        .legend(dc.legend().horizontal(true))
+        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount})
+        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount})
+        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount})
+        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount})
+        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount})
+        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount})
+        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount})
+        .title(function(d) {
+          return `${d3.time.format('%Y-%m-%d')(d.key)} ${this.layer} ${d.value[this.layer] && d.value[this.layer].amount} (${d.value[this.layer] && d.value[this.layer].quantity})`;
+        })
         .brushOn(true)
         .elasticY(true);
+      this.monthlyChart.xAxis().ticks(d3.time.day, 1);
+
 
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -118,16 +155,16 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.groupChart.xAxis().ticks(5);
 
-      this.yearChart = dc.rowChart('#yearChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
-        .height(250)
-        .label(labelFmt)
-        .valueAccessor(amountAccessor)
-        .dimension(yearDim)
-        .group(amountByYear)
-        .elasticX(true);
-      this.yearChart.xAxis().ticks(5);
-
+      // this.yearChart = dc.rowChart('#yearChart')
+      //   .margins({top: 10, right: 30, bottom: 30, left: 0})
+      //   .height(250)
+      //   .label(labelFmt)
+      //   .valueAccessor(amountAccessor)
+      //   .dimension(yearDim)
+      //   .group(amountByYear)
+      //   .elasticX(true);
+      // this.yearChart.xAxis().ticks(5);
+      //
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .label(labelFmt)
@@ -137,17 +174,17 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.statusChart.xAxis().ticks(3);
 
-      this.departmentTable = dc.dataTable('#departmentTable')
-        .dimension(totalByDepartment)
-        .group(()=>{return 'departments';})
-        .columns([
-          d => { return d.key; },
-          d => { return quantityFmt(d.value.quantity); },
-          d => { return currencyFmt(d.value.amount); }
-        ])
-        .sortBy(function (d) { return d.key; })
-        .order(d3.descending);
-
+      // this.departmentTable = dc.dataTable('#departmentTable')
+      //   .dimension(totalByDepartment)
+      //   .group(()=>{return 'departments';})
+      //   .columns([
+      //     d => { return d.key; },
+      //     d => { return quantityFmt(d.value.quantity); },
+      //     d => { return currencyFmt(d.value.amount); }
+      //   ])
+      //   .sortBy(function (d) { return d.key; })
+      //   .order(d3.descending);
+      //
       // this.dataTable = dc.dataTable('#dataTable')
       //   .dimension(dateDim)
       //   .group(d => {return d3.time.month(d.date);})
@@ -178,9 +215,9 @@ export default Ember.Component.extend(ResizeAware,{
     rect = document.getElementById('groupChart').parentElement.getBoundingClientRect();
     this.groupChart.width(rect.width);
 
-    rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
-    this.yearChart.width(rect.width);
-
+    // rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
+    // this.yearChart.width(rect.width);
+    //
     dc.renderAll();
   },
 
