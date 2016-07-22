@@ -14,7 +14,7 @@ export default Ember.Component.extend(ResizeAware,{
     this.update();
   },
 
-  monthlyChart: null,
+  historicalSelect: null,
   departmentChart: null,
   dataTAble: null,
   boxND: null,
@@ -27,6 +27,10 @@ export default Ember.Component.extend(ResizeAware,{
 
       function amountAccessor(d) {
         return Math.round(d.value.amount * 100) / 100;
+      }
+
+      function quantityAccessor(d) {
+        return d.value.quantity;
       }
 
       function reduceAdd(p,v) {
@@ -62,7 +66,7 @@ export default Ember.Component.extend(ResizeAware,{
       var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
 
 
-      var amountByDate        = dateDim.group().reduceSum(dc.pluck('amount'));
+      var amountByDate        = dateDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByDepartment  = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByStatus      = statusDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByGroup       = groupDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -87,17 +91,45 @@ export default Ember.Component.extend(ResizeAware,{
         .valueAccessor(function(d){return d;})
         .group(quantityTotal);
 
-      this.monthlyChart = dc.barChart('#monthlyChart')
-        .margins({top: 10, right: 30, bottom: 40, left: 60})
+      this.historicalSelect = dc.barChart('#historicalSelect')
+        .margins({top: 10, right: 25, bottom: 50, left: 60})
         .centerBar(true)
+        .height(100)
         .gap(4)
+        .valueAccessor(amountAccessor)
         .x(d3.time.scale().domain([minDate,maxDate]))
         .xUnits(d3.time.months)
         .dimension(dateDim)
         .group(amountByDate)
         .brushOn(true)
         .elasticY(true);
-      this.monthlyChart.xAxis().ticks(d3.time.month, 1);
+      this.historicalSelect.yAxis().ticks(3);
+      this.historicalSelect.xAxis().ticks(d3.time.month, 1);
+
+      this.historicalChart = dc.compositeChart('#historicalChart')
+      this.historicalChart
+        .margins({top: 10, right: 50, bottom: 50, left: 60})
+        .height(250)
+        .valueAccessor(quantityAccessor)
+        .x(d3.time.scale().domain([minDate,maxDate]))
+        .xUnits(d3.time.months)
+        .dimension(dateDim)
+        .group(amountByDate)
+        .elasticY(true)
+        .brushOn(false)
+        .compose([
+          dc.barChart(this.historicalChart)
+            .centerBar(true)
+            .gap(4)
+            .valueAccessor(amountAccessor)
+            .group(amountByDate),
+          dc.lineChart(this.historicalChart)
+            .valueAccessor(quantityAccessor)
+            .group(amountByDate)
+            .ordinalColors(["red"])
+            .useRightYAxis(true)
+        ]);
+      this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
@@ -121,7 +153,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       this.yearChart = dc.rowChart('#yearChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
-        .height(250)
+        .height(150)
         .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(yearDim)
@@ -138,16 +170,16 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.statusChart.xAxis().ticks(3);
 
-      this.departmentTable = dc.dataTable('#departmentTable')
-        .dimension(totalByDepartment)
-        .group(()=>{return 'departments';})
-        .columns([
-          d => { return d.key; },
-          d => { return quantityFmt(d.value.quantity); },
-          d => { return currencyFmt(d.value.amount); }
-        ])
-        .sortBy(function (d) { return d.key; })
-        .order(d3.descending);
+      // this.departmentTable = dc.dataTable('#departmentTable')
+      //   .dimension(totalByDepartment)
+      //   .group(()=>{return 'departments';})
+      //   .columns([
+      //     d => { return d.key; },
+      //     d => { return quantityFmt(d.value.quantity); },
+      //     d => { return currencyFmt(d.value.amount); }
+      //   ])
+      //   .sortBy(function (d) { return d.key; })
+      //   .order(d3.descending);
 
       // this.dataTable = dc.dataTable('#dataTable')
       //   .dimension(dateDim)
@@ -167,8 +199,9 @@ export default Ember.Component.extend(ResizeAware,{
   },
 
   update() {
-    var rect = document.getElementById('monthlyChart').parentElement.getBoundingClientRect();
-    this.monthlyChart.width(rect.width);
+    var rect = document.getElementById('historicalSelect').parentElement.getBoundingClientRect();
+    // this.historicalSelect.width(rect.width);
+    this.historicalChart.width(rect.width);
 
     rect = document.getElementById('departmentChart').parentElement.getBoundingClientRect();
     this.departmentChart.width(rect.width);
