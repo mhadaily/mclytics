@@ -9,8 +9,18 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     }
   },
   model(params) {
+    let headers = {};
+
+    this.get('session').authorize('authorizer:oauth2-bearer', (headerName, headerValue) => {
+      headers[headerName] = headerValue;
+    });
+
     return Ember.RSVP.hash({
-      data: Ember.$.getJSON(`${config.apiUrl}/api/sales_orders`, params).then(data => {
+      data: Ember.$.ajax(`${config.apiUrl}/api/sales_orders`,
+        {
+          headers:headers,
+          data: params
+        }).then(data => {
         return data.map(function(d) {
           // d.date = dateParser(d.date);
           d.date = new Date(d.date);
