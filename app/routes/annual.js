@@ -12,8 +12,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     });
 
     return Ember.$.ajax(`${config.apiUrl}/analytics/sales_orders.csv`,
-      {headers:headers},
-      Ember.merge(params,{interval:'month',all:1})).then(data => {
+      {
+        headers:headers,
+        data: Ember.merge(params,{interval:'month',all:1})
+      }).then(data => {
       return d3.csv.parse(data,d=>{
         d.date      = new Date(d.date);
         d.quantity  = +d.quantity;
