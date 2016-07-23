@@ -11,6 +11,7 @@ Router.map(function() {
   this.route('revenue');
   this.route('annual');
   this.route('operation');
+  this.route('conversion');
 });
 
 export default Router;
