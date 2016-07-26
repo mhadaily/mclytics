@@ -248,8 +248,8 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.statusPieChart = dc.pieChart('#statusPieChart')
-        .width(268)
-        .height(280)
+        .width(168)
+        .height(180)
         .innerRadius(10)
         .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
         .dimension(statusDim)
