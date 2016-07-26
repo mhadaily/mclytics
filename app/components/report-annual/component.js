@@ -251,9 +251,11 @@ export default Ember.Component.extend(ResizeAware,{
         .width(268)
         .height(280)
         .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
         .dimension(statusDim)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .group(amountByStatus) 
+        .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
 
       this.statusPieChart;
 
@@ -307,8 +309,8 @@ export default Ember.Component.extend(ResizeAware,{
     rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
     this.monthChart.width(rect.width);    
 
-    // rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
-    // this.statusPieChart.width(rect.width);    
+    rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
+    this.statusPieChart.width(rect.width);    
 
     dc.renderAll();
 
