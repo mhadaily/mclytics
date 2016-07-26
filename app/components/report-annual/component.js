@@ -19,6 +19,7 @@ export default Ember.Component.extend(ResizeAware,{
   dataTAble: null,
   boxND: null,
   quantityND: null,
+  countND: null,
 
   init() {
     this._super(...arguments);
@@ -33,24 +34,32 @@ export default Ember.Component.extend(ResizeAware,{
         return d.value.quantity;
       }
 
+
+      function countAccessor(d) {
+        return d.value.count;
+      }      
+
       function reduceAdd(p,v) {
         p.quantity += v.quantity;
-        p.amount += v.amount;
+        p.amount   += v.amount;
+        p.count   += v.count;
         return p;
       }
 
       function reduceRem(p,v) {
         p.quantity  -= v.quantity;
         p.amount    -= v.amount;
+        p.count    -= v.count;
         return p;
       }
 
       function reduceIni() {
-        return {quantity: 0, amount: 0.0};
+        return {count: 0,quantity: 0, amount: 0.0};
       }
 
       var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
+      var countFmt = d3.format(",f");
       var percentageFmt = d3.format(".2%");
       var labelFmt    = d=>{
         var percentage = d.value.amount / amountTotal.value();
@@ -77,6 +86,8 @@ export default Ember.Component.extend(ResizeAware,{
 
       var amountTotal         = monthly.groupAll().reduceSum(dc.pluck('amount'));
       var quantityTotal       = monthly.groupAll().reduceSum(dc.pluck('quantity'));
+      var countTotal          = monthly.groupAll().reduceSum(dc.pluck('count'));
+
 
       var minDate = d3.time.month(moment(dateDim.bottom(1)[0].date).add(-1,'month').toDate());
       var maxDate = d3.time.month.ceil(dateDim.top(1)[0].date);
@@ -90,6 +101,24 @@ export default Ember.Component.extend(ResizeAware,{
         .formatNumber(d3.format(",f"))
         .valueAccessor(function(d){return d;})
         .group(quantityTotal);
+
+      this.countND = dc.numberDisplay("#countND")
+        .formatNumber(d3.format(",f"))
+        .valueAccessor(function(d){return d;})
+        .group(countTotal);  
+
+
+      /*
+        TODO:
+        - Lable Alignemnt 
+        - renderlet
+              .renderlet(function (chart) {
+                          chart.selectAll('g.x text')
+                            .attr('dx', '-30')
+                            .style('text-anchor', 'start')
+                            .attr('transform', 'rotate(45 -10 10)')
+                      })
+       */
 
       this.historicalSelect = dc.barChart('#historicalSelect')
         .margins({top: 10, right: 25, bottom: 50, left: 60})
@@ -105,6 +134,8 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticY(true);
       this.historicalSelect.yAxis().ticks(3);
       this.historicalSelect.xAxis().ticks(d3.time.month, 1);
+
+
 
       this.historicalChart = dc.compositeChart('#historicalChart')
       this.historicalChart
@@ -127,7 +158,12 @@ export default Ember.Component.extend(ResizeAware,{
             .valueAccessor(quantityAccessor)
             .group(amountByDate)
             .ordinalColors(["red"])
-            .useRightYAxis(true)
+            .useRightYAxis(true),
+          dc.lineChart(this.historicalChart)
+            .valueAccessor(countAccessor)
+            .group(amountByDate)
+            .ordinalColors(["green"])
+            .useRightYAxis(true)  
         ]);
       this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
@@ -216,6 +252,9 @@ export default Ember.Component.extend(ResizeAware,{
     this.yearChart.width(rect.width);
 
     dc.renderAll();
+
+
+
   },
 
   actions: {

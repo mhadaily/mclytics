@@ -19,6 +19,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       return d3.csv.parse(data,d=>{
         d.date      = new Date(d.date);
         d.quantity  = +d.quantity;
+        d.count     = +d.count;
         d.amount    = +d.amount;
         return d;
       });
