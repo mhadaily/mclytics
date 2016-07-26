@@ -70,12 +70,12 @@ export default Ember.Component.extend(ResizeAware,{
      
       var labelFmt    = d=>{
         var percentage = d.value.amount / amountTotal.value();
-        return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
+        return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
       };
      
       var labelFmt2    = d=>{
         var percentage = d.value.amount / amountTotal.value();
-        return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
+        return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
       };
 
       var monthly = crossfilter(this.data);
@@ -163,20 +163,21 @@ export default Ember.Component.extend(ResizeAware,{
         .group(amountByDate)
         .elasticY(true)
         .brushOn(false)
+        .legend(dc.legend().x(80).y(0).gap(5).autoItemWidth(true))
         .compose([
           dc.barChart(this.historicalChart)
             .centerBar(true)
             .gap(4)
             .valueAccessor(amountAccessor)
-            .group(amountByDate),
+            .group(amountByDate,"Total Amount"),
           dc.lineChart(this.historicalChart)
             .valueAccessor(quantityAccessor)
-            .group(amountByDate)
+            .group(amountByDate,"Quantity Sold")
             .ordinalColors(["red"])
             .useRightYAxis(true),
           dc.lineChart(this.historicalChart)
             .valueAccessor(countAccessor)
-            .group(amountByDate)
+            .group(amountByDate,"Number Of Sales")
             .ordinalColors(["green"])
             .useRightYAxis(true)  
         ]);
@@ -225,7 +226,6 @@ export default Ember.Component.extend(ResizeAware,{
 
 
 
-
      this.weekChart = dc.rowChart('#weekChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(450)
@@ -245,6 +245,19 @@ export default Ember.Component.extend(ResizeAware,{
         .group(amountByStatus)
         .elasticX(true);
       this.statusChart.xAxis().ticks(3);
+
+
+      this.statusPieChart = dc.pieChart('#statusPieChart')
+        .width(268)
+        .height(280)
+        .innerRadius(10)
+        .dimension(statusDim)
+        .valueAccessor(amountAccessor)
+        .group(amountByStatus) 
+
+      this.statusPieChart;
+
+
 
       // this.departmentTable = dc.dataTable('#departmentTable')
       //   .dimension(totalByDepartment)
@@ -293,6 +306,9 @@ export default Ember.Component.extend(ResizeAware,{
 
     rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
     this.monthChart.width(rect.width);    
+
+    // rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
+    // this.statusPieChart.width(rect.width);    
 
     dc.renderAll();
 
