@@ -57,6 +57,7 @@ export default Ember.Component.extend(ResizeAware,{
         return {count: 0,quantity: 0, amount: 0.0};
       }
 
+
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                       'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -71,6 +72,11 @@ export default Ember.Component.extend(ResizeAware,{
         var percentage = d.value.amount / amountTotal.value();
         return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
       };
+     
+      var labelFmt2    = d=>{
+        var percentage = d.value.amount / amountTotal.value();
+        return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
+      };
 
       var monthly = crossfilter(this.data);
 
@@ -79,9 +85,8 @@ export default Ember.Component.extend(ResizeAware,{
       var statusDim           = monthly.dimension(d=>{return d.status;});
       var groupDim            = monthly.dimension(d=>{return d.product_group;});
       var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
-      var monthDim            = monthly.dimension(d=>{return monthNames[d.date.getMonth()];});
+      var monthDim            = monthly.dimension(d=>{return d.date.getMonth();});
       var weekDim             = monthly.dimension(d=>{return weekDaysName[d.date.getDay()];});
-
 
 
       var amountByDate        = dateDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -211,12 +216,15 @@ export default Ember.Component.extend(ResizeAware,{
       this.monthChart = dc.rowChart('#monthChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(450)
-        .label(labelFmt)
+        .label(labelFmt2)
         .valueAccessor(amountAccessor)
         .dimension(monthDim)
         .group(amountByMonth)
         .elasticX(true);
       this.monthChart.xAxis().ticks(5);
+
+
+
 
      this.weekChart = dc.rowChart('#weekChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
