@@ -57,10 +57,16 @@ export default Ember.Component.extend(ResizeAware,{
         return {count: 0,quantity: 0, amount: 0.0};
       }
 
+      var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+
+      var weekDaysName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']                
+                    
       var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
       var countFmt = d3.format(",f");
       var percentageFmt = d3.format(".2%");
+     
       var labelFmt    = d=>{
         var percentage = d.value.amount / amountTotal.value();
         return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.quantity)}) `;
@@ -73,6 +79,9 @@ export default Ember.Component.extend(ResizeAware,{
       var statusDim           = monthly.dimension(d=>{return d.status;});
       var groupDim            = monthly.dimension(d=>{return d.product_group;});
       var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
+      var monthDim            = monthly.dimension(d=>{return monthNames[d.date.getMonth()];});
+      var weekDim             = monthly.dimension(d=>{return weekDaysName[d.date.getDay()];});
+
 
 
       var amountByDate        = dateDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -80,7 +89,8 @@ export default Ember.Component.extend(ResizeAware,{
       var amountByStatus      = statusDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByGroup       = groupDim.group().reduce(reduceAdd,reduceRem,reduceIni);
       var amountByYear        = yearDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-
+      var amountByMonth       = monthDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      var amountByWeek        = weekDim.group().reduce(reduceAdd,reduceRem,reduceIni);
 
       var totalByDepartment   = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
 
@@ -197,6 +207,28 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.yearChart.xAxis().ticks(5);
 
+
+      this.monthChart = dc.rowChart('#monthChart')
+        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .height(450)
+        .label(labelFmt)
+        .valueAccessor(amountAccessor)
+        .dimension(monthDim)
+        .group(amountByMonth)
+        .elasticX(true);
+      this.monthChart.xAxis().ticks(5);
+
+     this.weekChart = dc.rowChart('#weekChart')
+        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .height(450)
+        .label(labelFmt)
+        .valueAccessor(amountAccessor)
+        .dimension(weekDim)
+        .group(amountByWeek)
+        .elasticX(true);
+      this.weekChart.xAxis().ticks(5);
+
+
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .label(labelFmt)
@@ -250,6 +282,9 @@ export default Ember.Component.extend(ResizeAware,{
 
     rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
     this.yearChart.width(rect.width);
+
+    rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
+    this.monthChart.width(rect.width);    
 
     dc.renderAll();
 
