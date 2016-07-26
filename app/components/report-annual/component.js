@@ -193,6 +193,20 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.departmentChart.xAxis().ticks(5);
 
+
+      this.departmentPieChart = dc.pieChart('#departmentPieChart')
+        .width(168)
+        .height(180)
+        .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
+        .dimension(departmentDim)
+        .valueAccessor(countAccessor)
+        .group(amountByDepartment) 
+        .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33'])
+
+      this.departmentPieChart;
+
+
       this.groupChart = dc.rowChart('#groupChart')
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(500)
@@ -310,7 +324,10 @@ export default Ember.Component.extend(ResizeAware,{
     this.monthChart.width(rect.width);    
 
     rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
-    this.statusPieChart.width(rect.width);    
+    this.statusPieChart.width(rect.width);   
+
+   rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
+    this.departmentPieChart.width(rect.width);    
 
     dc.renderAll();
 
