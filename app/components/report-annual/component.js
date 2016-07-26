@@ -156,7 +156,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.historicalChart
         .margins({top: 10, right: 50, bottom: 50, left: 60})
         .height(250)
-        .valueAccessor(quantityAccessor)
+        .valueAccessor(countAccessor)
         .x(d3.time.scale().domain([minDate,maxDate]))
         .xUnits(d3.time.months)
         .dimension(dateDim)
