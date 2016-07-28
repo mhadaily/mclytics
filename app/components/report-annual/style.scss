@@ -376,7 +376,7 @@ g.dc-legend-item.fadeout {
 }
 
 .statistic-box .number {
-    font-size: 3.125rem;
+    font-size: 2.425rem;
     line-height: 1;
     padding: 32px 0 0
 }
@@ -639,34 +639,6 @@ g.dc-legend-item.fadeout {
     line-height: 16px;
     position: relative;
     top: -1px
-}
-
-.lobipanel.panel-unpin {
-    -webkit-box-shadow: none;
-    box-shadow: none
-}
-
-.lobipanel.panel-expanded {
-    border-top: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%!important;
-    height: 100%!important;
-    z-index: 100!important;
-    -webkit-border-radius: 0;
-    border-radius: 0;
-    margin: 0 0 20px
-}
-
-.lobipanel.panel-expanded .panel-heading {
-    position: relative;
-    z-index: 110
-}
-
-.lobipanel.panel-expanded .panel-heading .panel-title {
-    margin-top: 0;
-    font-size: 1.5rem!important
 }
 
 .lobipanel-placeholder {
