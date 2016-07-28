@@ -4,6 +4,12 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
+    'ember-cli-preloader': {
+      paths: {
+        html: 'app/preloader/preloader.html',
+        css: 'app/preloader/preloader.css'
+      }
+    }
     // Add options here
   });
 
