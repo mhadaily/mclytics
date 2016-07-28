@@ -11,6 +11,7 @@
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
 }
+
 .preloader .circle {
   width: 60px;
   height: 60px;
