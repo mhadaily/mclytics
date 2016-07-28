@@ -37,7 +37,7 @@ export default Ember.Component.extend(ResizeAware,{
 
       function countAccessor(d) {
         return d.value.count;
-      }      
+      }
 
       function reduceAdd(p,v) {
         p.quantity += v.quantity;
@@ -61,18 +61,18 @@ export default Ember.Component.extend(ResizeAware,{
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                       'July', 'August', 'September', 'October', 'November', 'December'];
 
-      var weekDaysName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']                
-                    
+      var weekDaysName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+
       var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
       var countFmt = d3.format(",f");
       var percentageFmt = d3.format(".2%");
-     
+
       var labelFmt    = d=>{
         var percentage = d.value.amount / amountTotal.value();
         return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
       };
-     
+
       var labelFmt2    = d=>{
         var percentage = d.value.amount / amountTotal.value();
         return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
@@ -120,12 +120,12 @@ export default Ember.Component.extend(ResizeAware,{
       this.countND = dc.numberDisplay("#countND")
         .formatNumber(d3.format(",f"))
         .valueAccessor(function(d){return d;})
-        .group(countTotal);  
+        .group(countTotal);
 
 
       /*
         TODO:
-        - Lable Alignemnt 
+        - Lable Alignemnt
         - renderlet
               .renderlet(function (chart) {
                           chart.selectAll('g.x text')
@@ -179,14 +179,14 @@ export default Ember.Component.extend(ResizeAware,{
             .valueAccessor(countAccessor)
             .group(amountByDate,"Number Of Sales")
             .ordinalColors(["green"])
-            .useRightYAxis(true)  
+            .useRightYAxis(true)
         ]);
       this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(250)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .label(labelFmt)
         .dimension(departmentDim)
         .group(amountByDepartment)
@@ -200,8 +200,8 @@ export default Ember.Component.extend(ResizeAware,{
         .innerRadius(10)
         .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
         .dimension(departmentDim)
-        .valueAccessor(countAccessor)
-        .group(amountByDepartment) 
+        .valueAccessor(amountAccessor)
+        .group(amountByDepartment)
         .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33'])
 
       this.departmentPieChart;
@@ -210,7 +210,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.groupChart = dc.rowChart('#groupChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(500)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .label(labelFmt)
         .dimension(groupDim)
         .group(amountByGroup)
@@ -221,7 +221,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(150)
         .label(labelFmt)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .dimension(yearDim)
         .group(amountByYear)
         .elasticX(true);
@@ -232,7 +232,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left:10})
         .height(450)
         .label(labelFmt2)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .dimension(monthDim)
         .group(amountByMonth)
         .elasticX(true);
@@ -245,8 +245,8 @@ export default Ember.Component.extend(ResizeAware,{
         .innerRadius(10)
         .legend(dc.legend().x(0).y(0).gap(10))
         .dimension(monthDim)
-        .valueAccessor(countAccessor)
-        .group(amountByMonth) 
+        .valueAccessor(amountAccessor)
+        .group(amountByMonth)
 
       this.monthPieChart;
 
@@ -255,7 +255,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(450)
         .label(labelFmt)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .dimension(weekDim)
         .group(amountByWeek)
         .elasticX(true);
@@ -265,7 +265,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .label(labelFmt)
-        .valueAccessor(countAccessor)
+        .valueAccessor(amountAccessor)
         .dimension(statusDim)
         .group(amountByStatus)
         .elasticX(true);
@@ -278,8 +278,8 @@ export default Ember.Component.extend(ResizeAware,{
         .innerRadius(10)
         .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
         .dimension(statusDim)
-        .valueAccessor(countAccessor)
-        .group(amountByStatus) 
+        .valueAccessor(amountAccessor)
+        .group(amountByStatus)
         .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
 
       this.statusPieChart;
@@ -332,13 +332,13 @@ export default Ember.Component.extend(ResizeAware,{
     this.yearChart.width(rect.width);
 
     rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
-    this.monthChart.width(rect.width);    
+    this.monthChart.width(rect.width);
 
     rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
-    this.statusPieChart.width(rect.width);   
+    this.statusPieChart.width(rect.width);
 
    rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
-    this.departmentPieChart.width(rect.width);    
+    this.departmentPieChart.width(rect.width);
 
     dc.renderAll();
 
