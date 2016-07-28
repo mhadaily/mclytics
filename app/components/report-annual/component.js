@@ -186,7 +186,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.departmentChart = dc.rowChart('#departmentChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(250)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .label(labelFmt)
         .dimension(departmentDim)
         .group(amountByDepartment)
@@ -210,7 +210,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.groupChart = dc.rowChart('#groupChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(500)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .label(labelFmt)
         .dimension(groupDim)
         .group(amountByGroup)
@@ -221,7 +221,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(150)
         .label(labelFmt)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .dimension(yearDim)
         .group(amountByYear)
         .elasticX(true);
@@ -232,7 +232,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left:10})
         .height(450)
         .label(labelFmt2)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .dimension(monthDim)
         .group(amountByMonth)
         .elasticX(true);
@@ -245,7 +245,7 @@ export default Ember.Component.extend(ResizeAware,{
         .innerRadius(10)
         .legend(dc.legend().x(0).y(0).gap(10))
         .dimension(monthDim)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .group(amountByMonth) 
 
       this.monthPieChart;
@@ -255,7 +255,7 @@ export default Ember.Component.extend(ResizeAware,{
         .margins({top: 10, right: 30, bottom: 30, left: 0})
         .height(450)
         .label(labelFmt)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .dimension(weekDim)
         .group(amountByWeek)
         .elasticX(true);
@@ -265,7 +265,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.statusChart = dc.rowChart('#statusChart')
         .margins({top: 10, right: 30, bottom: 30, left: 10})
         .label(labelFmt)
-        .valueAccessor(amountAccessor)
+        .valueAccessor(countAccessor)
         .dimension(statusDim)
         .group(amountByStatus)
         .elasticX(true);
