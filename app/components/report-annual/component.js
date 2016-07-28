@@ -184,7 +184,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
       this.departmentChart = dc.rowChart('#departmentChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(250)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -208,7 +208,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.groupChart = dc.rowChart('#groupChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(500)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -218,7 +218,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.groupChart.xAxis().ticks(5);
 
       this.yearChart = dc.rowChart('#yearChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(150)
         .label(labelFmt)
         .valueAccessor(amountAccessor)
@@ -229,7 +229,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.monthChart = dc.rowChart('#monthChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left:10})
         .height(450)
         .label(labelFmt2)
         .valueAccessor(amountAccessor)
@@ -238,6 +238,17 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.monthChart.xAxis().ticks(5);
 
+
+      this.monthPieChart = dc.pieChart('#monthPieChart')
+        .width(168)
+        .height(220)
+        .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(10))
+        .dimension(monthDim)
+        .valueAccessor(amountAccessor)
+        .group(amountByMonth) 
+
+      this.monthPieChart;
 
 
      this.weekChart = dc.rowChart('#weekChart')
@@ -252,7 +263,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.statusChart = dc.rowChart('#statusChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(statusDim)
