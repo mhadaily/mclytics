@@ -1,4 +1,3 @@
-
 // $enable-flex: true;
 
 $brand-primary:             steelblue;
@@ -15,7 +14,7 @@ $gray-lightest:             darken($brand-primary, 40%);
 // $brand-warning:             #f0ad4e;
 // $brand-danger:              #d9534f;
 
-$body-bg:                   white;
+$body-bg:                   #eceff4;
 $body-color:                $gray-dark;
 
 $card-bg: rgba($body-bg,.25);
@@ -49,3 +48,6 @@ body {
   border-radius: 2px;
   border: thin solid gray;
 }
+
+
+
