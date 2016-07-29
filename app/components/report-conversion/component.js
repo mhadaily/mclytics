@@ -73,11 +73,22 @@ export default Ember.Component.extend({
         .group(this.monthGroup)
 
       this.coachChart = dc.rowChart('#coachChart')
-        .height(700)
+        .height(800)
+        .elasticX(true)
         .valueAccessor(amountAccessor)
         .dimension(l1CoachDim)
         .group(this.l1CoachGroup)
       this.coachChart.xAxis().ticks(5)
+
+
+      this.coachPieChart = dc.pieChart('#coachPieChart')
+        .height(700)
+        .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
+        .dimension(l1CoachDim)
+        .valueAccessor(amountAccessor)
+        .group(this.l1CoachGroup)
+      this.coachPieChart
 
       this.groupChart = dc.rowChart('#groupChart')
         .height(100)
@@ -102,6 +113,12 @@ export default Ember.Component.extend({
 
     rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
     this.monthChart.width(rect.width);
+
+    rect = document.getElementById('coachPieChart').parentElement.getBoundingClientRect();
+    this.coachPieChart.width(rect.width);
+
+
+
     // rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
     // this.yearChart.width(rect.width);
     //
