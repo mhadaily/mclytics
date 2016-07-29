@@ -315,6 +315,7 @@ export default Ember.Component.extend(ResizeAware,{
   },
 
   update() {
+
     var rect = document.getElementById('historicalSelect').parentElement.getBoundingClientRect();
     // this.historicalSelect.width(rect.width);
     this.historicalChart.width(rect.width);
@@ -339,6 +340,9 @@ export default Ember.Component.extend(ResizeAware,{
 
    rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
     this.departmentPieChart.width(rect.width);
+
+    rect = document.getElementById('monthPieChart').parentElement.getBoundingClientRect();
+    this.monthPieChart.width(rect.width);
 
     dc.renderAll();
 
