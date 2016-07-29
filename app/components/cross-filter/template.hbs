@@ -1,68 +1,117 @@
 <div class="row m-t-1">
   <div class="col-lg-6">
-    <h4>
-      {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}
-    </h4>
-    <div class="card-group m-t-1">
-      <div class="card card-block">
-        <h5>${{format-number totalAmount format="(,0)"}}</h5> Total
-      </div>
-      <div class="card card-block">
-        <h5>{{format-number totalCount format="(,0)"}}</h5> Unit(s) Sold
-      </div>
-      <div class="card card-block">
-        <h5>{{format-number projection format="(,0)"}}</h5> Projection
-      </div>
-      <div class="card card-block">
-        <h5>{{if target.amount (format-number target.amount format="(,0)") 'N/A'}}</h5> Target
-      </div>
-      <div class="card card-block">
-        <h5>{{if target.amount (format-number percentToTarget format="(,0.00%)") 'N/A' }}</h5> % to Target
-      </div>
-    </div>
-    <h6 class="m-t-1">Daily Accummulated</h6>
-    <div>
-      {{graph-month data=datesGroup target=target.amount}}
-    </div>
-    <h6 class="m-t-1">Daily</h6>
-    <div>
-      {{graph-daily data=datesGroup target=target.amount leastSquaresCoeff=leastSquaresCoeff}}
-    </div>
+     <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title"> {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}</h3>
+              </header>
+              <div class="box-typical-body panel-body">
+
+               <div class="col-md-12"><br/>
+                     <article class="statistic-box red">
+                        <div>
+                            <div class="number"> ${{format-number totalAmount format="(,0)"}}</div>
+                            <div class="caption"><div>Total</div></div>
+                        </div>
+                    </article>
+                  </div>
+                 <div class="col-md-6">
+                     <article class="statistic-box purple">
+                        <div>
+                            <div class="number"> {{format-number totalCount format="(,0)"}}</div>
+                            <div class="caption">Unit(s) Sold<div></div></div>
+                        </div>
+                    </article>
+                  </div>
+                   <div class="col-md-6">
+                     <article class="statistic-box green">
+                        <div>
+                            <div class="number">{{format-number projection format="(,0)"}}</div>
+                            <div class="caption">Projection<div></div></div>
+                        </div>
+                    </article>
+                  </div>
+                   <div class="col-md-6">
+                     <article class="statistic-box yellow">
+                        <div>
+                            <div class="number">{{if target.amount (format-number target.amount format="(,0)") 'N/A'}}</div>
+                            <div class="caption">Target<div></div></div>
+                        </div>
+                    </article>
+                  </div>
+                   <div class="col-md-6">
+                     <article class="statistic-box red">
+                        <div>
+                            <div class="number">{{if target.amount (format-number percentToTarget format="(,0.00%)") 'N/A' }}</div>
+                            <div class="caption"> % to Target<div></div></div>
+                        </div>
+                    </article>
+                  </div>
+              </div>
+    </section>
   </div>
   <div class="col-lg-6">
-<div class="table-responsive">
-  <table class="table table-hover table-sm">
-    <thead>
-      <tr>
-        <th>Product</th>
-        {{#each departmentsGroup as |department| }}
-          <th>{{department.name}}</th>
-        {{/each}}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>All Product</th>
-        {{#each departmentsGroup as |department| }}
-          <td>
-            {{format-number department.value.amount format=",0"}}&nbsp;($)
-            {{format-number department.value.count format=",0"}}&nbsp;(U)
-          </td>
-        {{/each}}
-      </tr>
-      {{#each groupsGroup as |group| }}
-        <tr>
-          <th>{{group.name}}</th>
-          {{#each group.departments as |department| }}
-            <td class="{{if (eq department.value.count 0) "zero"}}">
-              {{format-number department.value.amount format=",0"}}&nbsp;($)
-              {{format-number department.value.count format=",0"}}&nbsp;(U)
-            </td>
-          {{/each}}
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-  </div>  </div>
+
+     <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+      <header class="box-typical-header panel-heading">
+          <h3 class="panel-title">Daily Accummulated</h3>
+      </header>
+      <div class="box-typical-body panel-body">
+            {{graph-month data=datesGroup target=target.amount}}
+      </div>
+    </section>
+
+  <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+      <header class="box-typical-header panel-heading">
+          <h3 class="panel-title">Daily</h3>
+      </header>
+      <div class="box-typical-body panel-body">
+             {{graph-daily data=datesGroup target=target.amount leastSquaresCoeff=leastSquaresCoeff}}
+      </div>
+  </section>
+
+  </div>
+</div>
+
+<div class="row m-t-1">
+  <div class="col-lg-12">
+            <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <div class="box-typical-body panel-body">
+                   <div class="table-responsive">
+                      <table class="table table-hover table-sm">
+                        <thead>
+                          <tr>
+                            <th>Product</th>
+                            {{#each departmentsGroup as |department| }}
+                              <th>{{department.name}}</th>
+                            {{/each}}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th>All Product</th>
+                            {{#each departmentsGroup as |department| }}
+                              <td>
+                                {{format-number department.value.amount format=",0"}}&nbsp;($)
+                                {{format-number department.value.count format=",0"}}&nbsp;(U)
+                              </td>
+                            {{/each}}
+                          </tr>
+                          {{#each groupsGroup as |group| }}
+                            <tr>
+                              <th>{{group.name}}</th>
+                              {{#each group.departments as |department| }}
+                                <td class="{{if (eq department.value.count 0) "zero"}}">
+                                  {{format-number department.value.amount format=",0"}}&nbsp;($)
+                                  {{format-number department.value.count format=",0"}}&nbsp;(U)
+                                </td>
+                              {{/each}}
+                            </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
+          </section>
+  </div>
 </div>
 {{yield}}
