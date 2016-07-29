@@ -1,29 +1,36 @@
 <div class="container-fluid">
-  <div class="row">
+<div class="row m-t-1">
     <div class="col-md-6">
-      <ul class="nav nav-pills m-t-1">
-        <li class="nav-item">
-          {{link-to 'Group' 'revenue' (query-params department=null) class=(if (eq department null) "nav-link activ" "nav-link")}}
-        </li>
-        {{#each model.departments as |d|}}
-        <li class="nav-item">
-          {{link-to d.name 'revenue' (query-params department=d.id) class=(if (eq department d.id) "nav-link activ" "nav-link")}}
-        </li>
-        {{/each}}
-      </ul>
+     <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">List</h3>
+              </header>
+         <div class="box-typical-body panel-body clearfix">
+                {{link-to 'Group' 'revenue' (query-params department=null) class=(if (eq department null) "btn btn-sm btn-danger" "btn btn-sm")}}
+              {{#each model.departments as |d|}}
+                {{link-to d.name 'revenue' (query-params department=d.id) class=(if (eq department d.id) "btn btn-sm btn-info" "btn btn-sm ")}}
+              {{/each}}
+          </div>
+      </section>
+
     </div>
     <div class="col-md-6">
-      <ul class="nav nav-pills m-t-1">
-        {{#each months as |month|}}
-          <li class="nav-item">
-            {{link-to
-              (moment-format month 'MMM') 'revenue'
-              (query-params date=(moment-format month "Y-M-D"))
-              class=(if (eq selectedMonth month) "nav-link active" "nav-link")
-            }}
-          </li>
-        {{/each}}
-      </ul>
+
+      <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">MONTHS</h3>
+              </header>
+         <div class="box-typical-body panel-body clearfix">
+            {{#each months as |month|}}
+                      {{link-to
+                      (moment-format month 'MMM') 'revenue'
+                      (query-params date=(moment-format month "Y-M-D"))
+                      class=(if (eq selectedMonth month) "btn btn-sm btn-danger" "btn btn-sm ")
+                    }}
+            {{/each}}
+          </div>
+      </section>
+
     </div>
   </div>
   {{cross-filter data=model targets=model.targets selectedMonth=selectedMonth selectedDepartment=selectedDepartment}}
