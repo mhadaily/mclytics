@@ -105,7 +105,7 @@ export default Ember.Component.extend(ResizeAware,{
         .valueAccessor(d=>{return d;})
         .group(quantityTotal);
 
-      this.projectionND = dc.numberDisplay("#quantityND")
+      this.projectionND = dc.numberDisplay("#projectionND")
         .formatNumber(d3.format(",f"))
         .valueAccessor(d=>{return d;})
         .group(amountTotal);
@@ -136,7 +136,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.departmentChart = dc.rowChart('#departmentChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(250)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -145,8 +145,19 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.departmentChart.xAxis().ticks(5);
 
+     this.departmentPieChart = dc.pieChart('#departmentPieChart')
+        .width(168)
+        .height(180)
+        .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
+        .dimension(departmentDim)
+        .valueAccessor(amountAccessor)
+        .group(amountByDepartment)
+        .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33'])
+      this.departmentPieChart;
+
       this.groupChart = dc.rowChart('#groupChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .height(500)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -155,24 +166,27 @@ export default Ember.Component.extend(ResizeAware,{
         .elasticX(true);
       this.groupChart.xAxis().ticks(5);
 
-      // this.yearChart = dc.rowChart('#yearChart')
-      //   .margins({top: 10, right: 30, bottom: 30, left: 0})
-      //   .height(250)
-      //   .label(labelFmt)
-      //   .valueAccessor(amountAccessor)
-      //   .dimension(yearDim)
-      //   .group(amountByYear)
-      //   .elasticX(true);
-      // this.yearChart.xAxis().ticks(5);
-      //
       this.statusChart = dc.rowChart('#statusChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+        .margins({top: 10, right: 30, bottom: 30, left: 10})
         .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(statusDim)
         .group(amountByStatus)
         .elasticX(true);
       this.statusChart.xAxis().ticks(3);
+
+
+       this.statusPieChart = dc.pieChart('#statusPieChart')
+        .width(168)
+        .height(180)
+        .innerRadius(10)
+        .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
+        .dimension(statusDim)
+        .valueAccessor(amountAccessor)
+        .group(amountByStatus)
+        .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
+
+      this.statusPieChart;
 
       // this.departmentTable = dc.dataTable('#departmentTable')
       //   .dimension(totalByDepartment)
@@ -215,6 +229,12 @@ export default Ember.Component.extend(ResizeAware,{
     rect = document.getElementById('groupChart').parentElement.getBoundingClientRect();
     this.groupChart.width(rect.width);
 
+   rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
+    this.departmentPieChart.width(rect.width);
+
+   rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
+    this.statusPieChart.width(rect.width);
+
     // rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
     // this.yearChart.width(rect.width);
     //
@@ -222,12 +242,14 @@ export default Ember.Component.extend(ResizeAware,{
   },
 
   actions: {
+
+    masterReset(){
+        dc.filterAll()
+        dc.renderAll()
+    },
+
     reset(chart) {
-      if(chart) {
-        this.get(chart).filter(null).redrawGroup();
-      } else {
-        this.monthly.filterAll();
-      }
+      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll()
     }
   }
 
