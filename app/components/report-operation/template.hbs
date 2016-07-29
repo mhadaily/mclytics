@@ -1,75 +1,107 @@
-<div class="container-fluid">
-  <div class="row m-t-1 m-b-1">
-    <div class="col-md-4 col-lg-3">
-      <div class="card card-block">
-        <div class="row">
-          <div class="col-sm-4 col-md-12 m-b-1">
-            <h4 id="boxND" class="card-title"></h4>
-            <p class="card-text">Total Amount</p>
-          </div>
-          <div class="col-sm-4 col-md-12 m-b-1">
-            <h4 id="quantityND" class="card-title"></h4>
-            <p class="card-text">Number of Sales</p>
-          </div>
-          <div class="col-sm-4 col-md-12 m-b-1">
-            <h4 id="projectionND" class="card-title"></h4>
-            <p class="card-text">Projection</p>
-          </div>
-        </div>
+<div class="annual-wrapper">
+  <div class="container-fluid">
+    <div class="row m-t-1">
+      <div class="col-xs-12 col-sm-12 col-md-3">
+          <article class="statistic-box red">
+              <div>
+                  <div class="number" id="boxND"></div>
+                  <div class="caption"><div>Total Amount</div></div>
+              </div>
+          </article>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-3">
+          <article class="statistic-box purple">
+              <div>
+                  <div class="number" id="quantityND"></div>
+                  <div class="caption"><div>Quantity Sold</div></div>
+              </div>
+          </article>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-3">
+           <article class="statistic-box green">
+              <div>
+                  <div class="number" id="projectionND"></div>
+                  <div class="caption"><div>Projection</div></div>
+              </div>
+          </article>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-3">
+         <article class="statistic-box yellow">
+            <div>
+                <div class="number"> <a href="#" class="masterReset" {{action 'masterReset'}}>Reset All</a></div>
+                <div class="caption"><div>Redrawing Charts</div></div>
+            </div>
+        </article>
       </div>
     </div>
-    <div class="col-md-6 col-lg-7">
-      <div id="monthlyChart">
-        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'monthlyChart'}}>reset</a>
-        <h6>by Month</h6>
+    <div class="row">
+      <div class="col-md-6 col-lg-12">
+            <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Current Month <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'monthlyChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="monthlyChart">
+              </div>
+            </section>
+
       </div>
     </div>
-    <div class="col-md-2 col-lg-2">
-      <div id="statusChart">
-        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'statusChart'}}>reset</a>
-        <h6>by Status</h6>
-      </div>
-    </div>
-  </div>
   <div class="row">
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-3">
-      <div id="departmentChart">
-        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'departmentChart'}}>reset</a>
-        <h6>by Channels</h6>
+      <div class="col-md-4">
+
+        <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Channels <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'departmentChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="departmentChart">
+
+              </div>
+          </section>
+
+
+         <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Channels Pie Chart <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'departmentPieChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="departmentPieChart">
+
+              </div>
+          </section>
+
+
       </div>
-      {{!-- <table id="departmentTable" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Quantity</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-      </table> --}}
-    </div>
-    <div class="col-md-3">
-      <div id="groupChart">
-        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'groupChart'}}>reset</a>
-        <h6>by Product Groups</h6>
+      <div class="col-md-4">
+           <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Product Groups <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'groupChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="groupChart">
+
+              </div>
+          </section>
       </div>
-    </div>
-    <div class="col-md-3">
-      {{!-- <div id="yearChart">
-        <a href="#" class="reset pull-xs-right" style="display: none" {{action 'reset' 'yearChart'}}>reset</a>
-        <h6>Year</h6>
-      </div> --}}
-    </div>
+      <div class="col-md-4">
+        <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Status <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'statusChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="statusChart">
+
+              </div>
+          </section>
+
+            <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+              <header class="box-typical-header panel-heading">
+                  <h3 class="panel-title">Status Piechart <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'statusPieChart'}}>X</button></h3>
+              </header>
+              <div class="box-typical-body panel-body" id="statusPieChart">
+
+              </div>
+          </section>
+      </div>
   </div>
 
-  {{!-- <table id="dataTable" class="table table-striped table-sm">
-    <thead>
-      <th>Date</th>
-      <th>Department</th>
-      <th>Group</th>
-      <th>Amount</th>
-    </thead>
-  </table> --}}
+  </div>
 </div>
+
 {{yield}}
