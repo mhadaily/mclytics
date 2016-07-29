@@ -111,7 +111,7 @@ export default Ember.Component.extend(ResizeAware,{
         .group(amountTotal);
 
       this.monthlyChart = dc.barChart('#monthlyChart')
-        .margins({top: 20, right: 30, bottom: 40, left: 60})
+        .margins({top: 40, right: 30, bottom: 40, left: 60})
         .centerBar(false)
         .valueAccessor(d=>{return d;})
         .gap(4)
@@ -119,7 +119,7 @@ export default Ember.Component.extend(ResizeAware,{
         .xUnits(d3.time.days)
         .dimension(dateDim)
         .centerBar(true)
-        .legend(dc.legend().horizontal(true))
+        .legend(dc.legend().x(15).y(10).gap(15).autoItemWidth(true).horizontal(true))
         .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount})
         .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount})
         .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount})
@@ -133,6 +133,30 @@ export default Ember.Component.extend(ResizeAware,{
         .brushOn(true)
         .elasticY(true);
       this.monthlyChart.xAxis().ticks(d3.time.day, 1);
+
+      this.monthlyLineChart = dc.lineChart('#monthlyLineChart')
+        .height(480)
+        .x(d3.time.scale().domain([minDate,maxDate]))
+        .margins({left: 50, top: 50, right: 10, bottom: 60})
+        .renderArea(true)
+        .brushOn(false)
+        .renderDataPoints(true)
+        .clipPadding(10)
+        .dimension(dateDim)
+        .legend(dc.legend().x(15).y(10).gap(15).autoItemWidth(true).horizontal(true))
+        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount})
+        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount})
+        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount})
+        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount})
+        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount})
+        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount})
+        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount})
+        .title(function(d) {
+          return `${d3.time.format('%Y-%m-%d')(d.key)} ${this.layer} ${d.value[this.layer] && d.value[this.layer].amount} (${d.value[this.layer] && d.value[this.layer].quantity})`;
+        })
+        .brushOn(true)
+        .elasticY(true);
+      this.monthlyLineChart;
 
 
       this.departmentChart = dc.rowChart('#departmentChart')
@@ -187,6 +211,9 @@ export default Ember.Component.extend(ResizeAware,{
         .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
 
       this.statusPieChart;
+
+
+
 
       // this.departmentTable = dc.dataTable('#departmentTable')
       //   .dimension(totalByDepartment)
