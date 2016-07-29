@@ -352,11 +352,7 @@ export default Ember.Component.extend(ResizeAware,{
         dc.redrawAll()
     },
     reset(chart) {
-      if(chart) {
-        this.get(chart).filter(null).redrawGroup();
-      } else {
-        this.monthly.filterAll();
-      }
+      chart ? this.get(chart).filter(null).redrawGroup() :  this.monthly.filterAll()
     }
   }
 
