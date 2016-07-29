@@ -86,8 +86,38 @@ export default Ember.Component.extend({
         .group(this.totalByGroup)
       this.groupChart.xAxis().ticks(5)
 
-      dc.renderAll();
 
-    })
+      this.update();
+
+    });
+
+  },
+
+  update() {
+    var rect = document.getElementById('groupChart').parentElement.getBoundingClientRect();
+    this.groupChart.width(rect.width);
+
+    rect = document.getElementById('coachChart').parentElement.getBoundingClientRect();
+    this.coachChart.width(rect.width);
+
+    rect = document.getElementById('monthChart').parentElement.getBoundingClientRect();
+    this.monthChart.width(rect.width);
+    // rect = document.getElementById('yearChart').parentElement.getBoundingClientRect();
+    // this.yearChart.width(rect.width);
+    //
+    dc.renderAll();
+  },
+
+  actions: {
+
+    masterReset(){
+        dc.filterAll()
+        dc.renderAll()
+    },
+
+    reset(chart) {
+      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll()
+    }
   }
+
 });
