@@ -8,6 +8,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       refreshModel: true
     }
   },
+
   model(params) {
     let headers = {};
 

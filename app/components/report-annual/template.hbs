@@ -78,23 +78,17 @@
   <div class="row">
       <div class="col-md-3">
 
-         <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
-              <header class="box-typical-header panel-heading">
-                  <h3 class="panel-title">Channels Pie Chart <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'departmentPieChart'}}>X</button></h3>
-              </header>
-              <div class="box-typical-body panel-body" id="departmentPieChart">
-
-              </div>
-          </section>
-
-
         <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
               <header class="box-typical-header panel-heading">
                   <h3 class="panel-title">Channels <button class="reset pull-xs-right btn btn-sm btn-info" {{action 'reset' 'departmentChart'}}>X</button></h3>
               </header>
+               <div class="box-typical-body panel-body" id="departmentPieChart">
+                 <button class="reset pull-xs-right btn btn-sm btn-info"  style="display:none" {{action 'reset' 'departmentPieChart'}}>X</button>
+              </div>
               <div class="box-typical-body panel-body" id="departmentChart">
 
               </div>
+
           </section>
 
       </div>

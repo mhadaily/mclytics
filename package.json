@@ -51,6 +51,7 @@
     "ember-component-css": "0.1.9",
     "ember-d3": "0.2.0",
     "ember-data": "^2.5.0",
+    "ember-data-store-cache": "1.0.0",
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^0.5.1",
     "ember-moment": "7.0.0-beta.3",
