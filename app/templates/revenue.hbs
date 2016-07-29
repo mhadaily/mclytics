@@ -6,10 +6,12 @@
                   <h3 class="panel-title">List</h3>
               </header>
          <div class="box-typical-body panel-body clearfix">
-                {{link-to 'Group' 'revenue' (query-params department=null) class=(if (eq department null) "btn btn-sm btn-danger" "btn btn-sm")}}
-              {{#each model.departments as |d|}}
-                {{link-to d.name 'revenue' (query-params department=d.id) class=(if (eq department d.id) "btn btn-sm btn-info" "btn btn-sm ")}}
-              {{/each}}
+              <div class="buttonList">
+                    {{link-to 'Group' 'revenue' (query-params department=null) class=(if (eq department null) "btn btn-sm btn-danger" "btn btn-sm btn-success")}}
+                  {{#each model.departments as |d|}}
+                    {{link-to d.name 'revenue' (query-params department=d.id) class=(if (eq department d.id) "btn btn-sm btn-danger" "btn btn-sm btn-success")}}
+                  {{/each}}
+              </div>
           </div>
       </section>
 
@@ -21,13 +23,15 @@
                   <h3 class="panel-title">MONTHS</h3>
               </header>
          <div class="box-typical-body panel-body clearfix">
-            {{#each months as |month|}}
-                      {{link-to
-                      (moment-format month 'MMM') 'revenue'
-                      (query-params date=(moment-format month "Y-M-D"))
-                      class=(if (eq selectedMonth month) "btn btn-sm btn-danger" "btn btn-sm ")
-                    }}
-            {{/each}}
+              <div class="buttonList">
+                  {{#each months as |month|}}
+                            {{link-to
+                            (moment-format month 'MMM') 'revenue'
+                            (query-params date=(moment-format month "Y-M-D"))
+                            class=(if (eq selectedMonth month) "btn btn-sm btn-danger" "btn btn-sm btn-warning")
+                          }}
+                  {{/each}}
+                </div>
           </div>
       </section>
 

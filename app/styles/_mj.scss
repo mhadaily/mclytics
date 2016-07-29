@@ -475,51 +475,22 @@ g.dc-legend-item.fadeout {
     border-radius: 4px;
     background: #fff;
     border: 1px solid #d8e2e7;
-    margin: 0 0 20px
+    margin: 0 0 20px;
+    .buttonList{
+            padding:15px 10px;
+    }
 }
 
 .box-typical .box-typical-header {
     display: table;
-    width: 100%
-}
-.box-typical .box-typical-header .action-btn {
-    display: inline-block;
-    vertical-align: top;
-    color: #adb7be;
-    border: none;
-    background: 0 0;
-    font-size: 1rem;
-    margin: 0 0 0 10px;
-    line-height: 18px
-}
+    width: 100%;
 
-.box-typical .box-typical-header .action-btn .font-icon {
-    vertical-align: middle
-}
-
-.box-typical .box-typical-header .action-btn .font-icon.font-icon-minus {
-    position: relative;
-    top: 1px
-}
-
-.box-typical .box-typical-header .action-btn:hover {
-    color: #00a8ff
-}
-
-.box-typical .box-typical-footer {
-    background: #fbfcfd;
-    padding: 12px 15px;
-    border-top: solid 1px #d8e2e7
-}
-
-.box-typical .box-typical-footer:last-child {
-    -webkit-border-radius: 0 0 4px 4px;
-    border-radius: 0 0 4px 4px
 }
 
 .box-typical .box-typical-section {
     border-top: solid 1px #d8e2e7;
-    padding: 15px
+    padding: 15px;
+
 }
 
 .box-typical .box-typical-section:first-child,
