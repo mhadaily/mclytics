@@ -23,10 +23,11 @@ $card-border-color: rgba($brand-primary,.5);
 $list-group-bg: rgba($body-bg,.25);
 $list-group-border-color: rgba($brand-primary,.5);
 
-$navbar-dark-color:                 white;
-$navbar-dark-hover-color:           rgba($navbar-dark-color,.75);
-$navbar-dark-active-color:          rgba($navbar-dark-color, 1);
-$navbar-dark-disabled-color:        rgba($brand-primary,.25);
+$navbar-dark-color-bg-hover:        #fa424a;
+$navbar-dark-color:                 #fff;
+$navbar-dark-hover-color:           lighten($navbar-dark-color-bg-hover,30%);
+$navbar-dark-active-color:          darken($navbar-dark-color-bg-hover,80%);
+$navbar-dark-disabled-color:        darken($navbar-dark-color-bg-hover,50%);
 
 @import 'bootstrap';
 @import 'pod-styles';
