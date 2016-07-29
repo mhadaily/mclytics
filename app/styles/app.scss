@@ -29,27 +29,7 @@ $navbar-dark-active-color:          rgba($navbar-dark-color, 1);
 $navbar-dark-disabled-color:        rgba($brand-primary,.25);
 
 @import 'bootstrap';
-@import "pod-styles";
-
-body {
-  padding-top: 54px;
-}
-.zero {
-  color: rgba(0, 0, 0, 0.3);
-}
-.d3-tip {
-  background-color: rgba(white,.5);
-  padding: 3px 12px;
-  border-radius: 2px;
-  border: thin solid gray;
-}
-.navbar {
-	padding: 10px 10px 10px 20px;
-	background: #1F2C36;
-	border-radius: 0;
-	margin-bottom: 0;
-	border: none;
-	z-index: 106;
-}
+@import 'pod-styles';
+@import './_mj';
 
 
