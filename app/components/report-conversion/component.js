@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import crossfilter from 'npm:crossfilter2';
-import dc from 'npm:dc'
+import dc from 'npm:dc';
+import d3 from 'd3';
 
 function reduceAdd(p,v) {
   p.quantity += v.quantity;
@@ -43,10 +44,10 @@ export default Ember.Component.extend({
     this.crossfilter = crossfilter(this.data);
 
     var total       = this.crossfilter.groupAll().reduce(reduceAdd,reduceRem,reduceIni);
-    var monthDim    = this.crossfilter.dimension(d=>{return d3.time.month(d.date)});
-    var dateMlrDim  = this.crossfilter.dimension(d=>{return d3.time.month(d.date_mlr)});
-    var l1CoachDim  = this.crossfilter.dimension(d=>{return d.l1_coach || 'no coach'});
-    var groupDim    = this.crossfilter.dimension(d=>{return d.product_group || 'no group'});
+    var monthDim    = this.crossfilter.dimension(d=>{return d3.time.month(d.date);});
+    var dateMlrDim  = this.crossfilter.dimension(d=>{return d3.time.month(d.date_mlr);});
+    var l1CoachDim  = this.crossfilter.dimension(d=>{return d.l1_coach || 'no coach';});
+    var groupDim    = this.crossfilter.dimension(d=>{return d.product_group || 'no group';});
 
     this.monthGroup   = monthDim.group().reduce(reduceAdd,reduceRem,reduceIni);
     this.l1CoachGroup = l1CoachDim.group().reduce(reduceAdd,reduceRem,reduceIni);
@@ -57,12 +58,12 @@ export default Ember.Component.extend({
 
       this.amountND = dc.numberDisplay("#amountND")
         .formatNumber(currencyFmt)
-        .valueAccessor(d=>{return d.amount})
+        .valueAccessor(d=>{return d.amount;})
         .group(total);
 
       this.countND = dc.numberDisplay("#countND")
         .formatNumber(countFmt)
-        .valueAccessor(d=>{return d.count})
+        .valueAccessor(d=>{return d.count;})
         .group(total);
 
       this.monthChart = dc.barChart('#monthChart')
@@ -70,15 +71,15 @@ export default Ember.Component.extend({
         .x(d3.time.scale().domain([monthDim.bottom(1)[0].date,monthDim.top(1)[0].date]))
         .xUnits(d3.time.months)
         .dimension(monthDim)
-        .group(this.monthGroup)
+        .group(this.monthGroup);
 
       this.coachChart = dc.rowChart('#coachChart')
         .height(800)
         .elasticX(true)
         .valueAccessor(amountAccessor)
         .dimension(l1CoachDim)
-        .group(this.l1CoachGroup)
-      this.coachChart.xAxis().ticks(5)
+        .group(this.l1CoachGroup);
+      this.coachChart.xAxis().ticks(5);
 
 
       this.coachPieChart = dc.pieChart('#coachPieChart')
@@ -87,15 +88,15 @@ export default Ember.Component.extend({
         .legend(dc.legend().x(0).y(0).gap(5).autoItemWidth(true))
         .dimension(l1CoachDim)
         .valueAccessor(amountAccessor)
-        .group(this.l1CoachGroup)
-      this.coachPieChart
+        .group(this.l1CoachGroup);
+      this.coachPieChart;
 
       this.groupChart = dc.rowChart('#groupChart')
         .height(100)
         .valueAccessor(amountAccessor)
         .dimension(groupDim)
-        .group(this.totalByGroup)
-      this.groupChart.xAxis().ticks(5)
+        .group(this.totalByGroup);
+      this.groupChart.xAxis().ticks(5);
 
 
       this.update();
@@ -128,12 +129,12 @@ export default Ember.Component.extend({
   actions: {
 
     masterReset(){
-        dc.filterAll()
-        dc.renderAll()
+        dc.filterAll();
+        dc.renderAll();
     },
 
     reset(chart) {
-      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll()
+      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll();
     }
   }
 

@@ -3,6 +3,7 @@ import d3 from 'd3';
 import crossfilter from 'npm:crossfilter2';
 import dc from 'npm:dc';
 import ResizeAware from 'ember-resize/mixins/resize-aware';
+import moment from 'moment';
 
 
 export default Ember.Component.extend(ResizeAware,{
@@ -46,14 +47,14 @@ export default Ember.Component.extend(ResizeAware,{
       }
 
       function reduceChannelAdd(p,v) {
-        p[v.department_name] = p[v.department_name] || {}
+        p[v.department_name] = p[v.department_name] || {};
         p[v.department_name].quantity  = (p[v.department_name].quantity || 0) + v.quantity;
         p[v.department_name].amount    = (p[v.department_name].amount || 0.0) + v.amount;
         return p;
       }
 
       function reduceChannelRem(p,v) {
-        p[v.department_name] = p[v.department_name] || {}
+        p[v.department_name] = p[v.department_name] || {};
         p[v.department_name].quantity  = (p[v.department_name].quantity || 0) - v.quantity;
         p[v.department_name].amount    = (p[v.department_name].amount || 0.0) - v.amount;
         return p;
@@ -120,13 +121,13 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(dateDim)
         .centerBar(true)
         .legend(dc.legend().x(15).y(10).gap(15).autoItemWidth(true).horizontal(true))
-        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount})
-        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount})
-        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount})
-        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount})
-        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount})
-        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount})
-        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount})
+        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount;})
+        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount;})
+        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount;})
+        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount;})
+        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount;})
+        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount;})
+        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount;})
         .title(function(d) {
           return `${d3.time.format('%Y-%m-%d')(d.key)} ${this.layer} ${d.value[this.layer] && d.value[this.layer].amount} (${d.value[this.layer] && d.value[this.layer].quantity})`;
         })
@@ -144,13 +145,13 @@ export default Ember.Component.extend(ResizeAware,{
         .clipPadding(10)
         .dimension(dateDim)
         .legend(dc.legend().x(15).y(10).gap(15).autoItemWidth(true).horizontal(true))
-        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount})
-        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount})
-        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount})
-        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount})
-        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount})
-        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount})
-        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount})
+        .group(amountByDate,'Corporate',d=>{return d.value['Corporate'] && d.value['Corporate'].amount;})
+        .stack(amountByDate,'DIV 2',d=>{return d.value['DIV 2'] && d.value['DIV 2'].amount;})
+        .stack(amountByDate,'EVENT',d=>{return d.value['EVENT'] && d.value['EVENT'].amount;})
+        .stack(amountByDate,'Not Tagged',d=>{return d.value['Not Tagged'] && d.value['Not Tagged'].amount;})
+        .stack(amountByDate,'TTI',d=>{return d.value['TTI'] && d.value['TTI'].amount;})
+        .stack(amountByDate,'Traffic',d=>{return d.value['Traffic'] && d.value['Traffic'].amount;})
+        .stack(amountByDate,'Dev',d=>{return d.value['Dev'] && d.value['Dev'].amount;})
         .title(function(d) {
           return `${d3.time.format('%Y-%m-%d')(d.key)} ${this.layer} ${d.value[this.layer] && d.value[this.layer].amount} (${d.value[this.layer] && d.value[this.layer].quantity})`;
         })
@@ -177,7 +178,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(departmentDim)
         .valueAccessor(amountAccessor)
         .group(amountByDepartment)
-        .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33'])
+        .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33']);
       this.departmentPieChart;
 
       this.groupChart = dc.rowChart('#groupChart')
@@ -208,8 +209,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(statusDim)
         .valueAccessor(amountAccessor)
         .group(amountByStatus)
-        .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
-
+        .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628']);
       this.statusPieChart;
 
 
@@ -271,12 +271,12 @@ export default Ember.Component.extend(ResizeAware,{
   actions: {
 
     masterReset(){
-        dc.filterAll()
-        dc.renderAll()
+        dc.filterAll();
+        dc.renderAll();
     },
 
     reset(chart) {
-      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll()
+      chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll();
     }
   }
 
