@@ -347,6 +347,17 @@ export default Ember.Component.extend(ResizeAware,{
     dc.renderAll();
 
 
+    var tip = d3.tip().attr('class', 'd3-tip')
+        .html(function (d) {
+        return '<span>' + this.textContent + '</span>';
+    }).offset([-10, 0]);
+
+
+    d3.select("div#historicalSelect.dc-chart svg").call(tip);
+
+    d3.selectAll("rect.bar")
+    .on('mouseover', tip.show )
+    .on("mouseout", tip.hide);
 
   },
 
