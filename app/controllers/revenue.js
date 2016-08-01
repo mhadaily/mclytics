@@ -16,6 +16,7 @@ export default Ember.Controller.extend({
     new Date(2016,4,1),
     new Date(2016,5,1),
     new Date(2016,6,1),
+    new Date(2016,7,1),
   ],
   selectedMonth: Ember.computed('date',function(){
     return this.get('date') && dateParser(this.get('date')) || d3.time.month(new Date());
