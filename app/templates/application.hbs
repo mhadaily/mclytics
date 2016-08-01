@@ -1,8 +1,9 @@
+{{#if session.isAuthenticated}}
 <nav class="navbar">
   {{#link-to 'index' class="navbar-brand" }}
     <img src="img/newlogo.png" class="logo img-responsive">
   {{/link-to}}
-  {{#if session.isAuthenticated}}
+
     <ul class="nav navbar-nav">
       <li class="nav-item">
         {{#link-to 'revenue' class="nav-link text-uppercase" }}revenue{{/link-to}}
@@ -22,6 +23,6 @@
         {{#link-to 'settings' class="nav-link text-uppercase" }}Settings{{/link-to}}
       </li>
     </ul>
-  {{/if}}
 </nav>
+{{/if}}
 {{outlet}}

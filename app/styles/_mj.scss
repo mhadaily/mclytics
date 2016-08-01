@@ -564,3 +564,119 @@ g.dc-legend-item.fadeout {
     box-shadow: none!important;
     color: #00a8ff!important
 }
+
+/* LOGIN */
+.login {
+  padding-top: 40px;
+  background-color: $bg-color !important;
+}
+.login .logo {
+  margin: 0 auto;
+  max-height: 120px;
+  padding: 15px;
+  text-align: center;
+}
+
+.login .content {
+  background-color: lighten(#eceef1, 10%);
+  width: 400px;
+  margin: 40px auto 10px auto;
+  padding: 30px;
+  padding-top: 10px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0.25rem;
+}
+
+.login .content h3 {
+  color: #4db3a5;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 400 !important;
+}
+
+.login .content h4 {
+  color: #555;
+}
+
+.login .content .login-form{
+  padding: 0px;
+  margin:0px;
+}
+
+.login .content .form-control {
+  border: none;
+  background-color: #dde3ec;
+  height: 43px;
+  color: #8290a3;
+  border: 1px solid #dde3ec;
+  &:focus,
+  &:active {
+      border: 1px solid #c3ccda;
+  }
+
+}
+
+.login .content select.form-control {
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.login .content .form-title {
+  font-weight: 300;
+  margin-bottom: 25px;
+}
+
+.login .content .form-actions {
+  clear: both;
+  border: 0px;
+  padding: 25px 30px 25px 30px;
+  margin-left: -30px;
+  margin-right: -30px;
+
+  > .btn {
+    margin-top: -2px;
+  }
+}
+
+.login .content .form-actions .btn {
+  margin-top: 1px;
+}
+
+.login .content .form-actions .btn {
+  font-weight: 600;
+  padding: 10px 20px !important;
+}
+
+@media (max-width: 440px) {
+  /***
+  Login page
+  ***/
+  .login .logo {
+    margin-top: 10px;
+  }
+
+  .login .content {
+    width: 280px;
+    margin-top: 10px;
+  }
+
+  .login .content h3 {
+    font-size: 22px;
+  }
+
+  .forget-password {
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  .login-options .social-icons {
+    float: left;
+    padding-top: 3px;
+  }
+
+  .login .checkbox {
+    font-size: 13px;
+  }
+
+}
