@@ -23,7 +23,12 @@
                   <h3 class="panel-title">MONTHS</h3>
               </header>
          <div class="box-typical-body panel-body clearfix">
-              <div class="buttonList">
+              {{!-- <div class="buttonList">
+                 {{#each years as |year|}}
+                 {{year}}
+                 {{/each}}
+                </div> --}}
+                 <div class="buttonList">
                   {{#each months as |month|}}
                             {{link-to
                             (moment-format month 'MMM') 'revenue'

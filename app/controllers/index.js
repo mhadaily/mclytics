@@ -22,5 +22,6 @@ export default Ember.Controller.extend({
     new Date('2016-04-01 00:00:00'),
     new Date('2016-05-01 00:00:00'),
     new Date('2016-06-01 00:00:00'),
+    new Date('2016-07-01 00:00:00'),
   ]
 });
