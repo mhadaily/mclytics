@@ -1,6 +1,27 @@
 <div class="row m-t-1">
   <div class="col-lg-6">
+
      <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+      <header class="box-typical-header panel-heading">
+          <h3 class="panel-title">Daily Accummulated</h3>
+      </header>
+      <div class="box-typical-body panel-body">
+            {{graph-month data=datesGroup target=target.amount}}
+      </div>
+    </section>
+
+  <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
+      <header class="box-typical-header panel-heading">
+          <h3 class="panel-title">Daily</h3>
+      </header>
+      <div class="box-typical-body panel-body">
+             {{graph-daily data=datesGroup target=target.amount leastSquaresCoeff=leastSquaresCoeff}}
+      </div>
+  </section>
+
+  </div>
+  <div class="col-lg-6">
+   <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
               <header class="box-typical-header panel-heading">
                   <h3 class="panel-title"> {{or selectedDepartment.name "Group"}} Revenue {{moment-format selectedMonth "MMM YYYY"}}</h3>
               </header>
@@ -48,32 +69,6 @@
                   </div>
               </div>
     </section>
-  </div>
-  <div class="col-lg-6">
-
-     <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
-      <header class="box-typical-header panel-heading">
-          <h3 class="panel-title">Daily Accummulated</h3>
-      </header>
-      <div class="box-typical-body panel-body">
-            {{graph-month data=datesGroup target=target.amount}}
-      </div>
-    </section>
-
-  <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
-      <header class="box-typical-header panel-heading">
-          <h3 class="panel-title">Daily</h3>
-      </header>
-      <div class="box-typical-body panel-body">
-             {{graph-daily data=datesGroup target=target.amount leastSquaresCoeff=leastSquaresCoeff}}
-      </div>
-  </section>
-
-  </div>
-</div>
-
-<div class="row m-t-1">
-  <div class="col-lg-12">
             <section class="box-typical box-typical-dashboard panel panel-default lobipanel" >
             <header class="box-typical-header panel-heading">
               <h3 class="panel-title">Data Table</h3>

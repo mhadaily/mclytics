@@ -408,23 +408,23 @@ g.dc-legend-item.fadeout {
 .statistic-box>div {
     -webkit-border-radius: inherit;
     border-radius: inherit;
-    height: 142px;
+    height: 72px;
     background: url(../img/statistic-box-grid.png) 50% 0;
     background-size: 21px 20px;
     position: relative
 }
 
 .statistic-box .number {
-    font-size: 2.425rem;
+    font-size: 1.825rem;
     line-height: 1;
-    padding: 32px 0 0
+    padding:5px 0 0
 }
 
 .statistic-box .caption {
     font-size: 1.0625rem;
     font-weight: 600;
     position: relative;
-    min-height: 35px;
+    min-height: 25px;
     line-height: 1
 }
 
@@ -511,7 +511,7 @@ g.dc-legend-item.fadeout {
     overflow: auto;
 }
 .lobipanel .panel-heading {
-    padding: 7px 10px
+    padding: 4px 5px
 }
 
 .lobipanel .panel-heading .panel-title {
@@ -519,7 +519,10 @@ g.dc-legend-item.fadeout {
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.4;
-    padding: 0
+    padding: 0;
+    .btn{
+      line-height: 1;
+    }
 }
 
 .lobipanel .panel-heading .panel-title input {
