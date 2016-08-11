@@ -16,6 +16,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
         data: Ember.merge(params,{interval:'day'})
       }).then(data => {
       return d3.csv.parse(data,d=>{
+        d.date      = moment(d.date).format('MM/DD/YYYY');
         d.date      = new Date(d.date);
         d.quantity  = +d.quantity;
         d.amount    = +d.amount;

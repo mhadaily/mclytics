@@ -32,6 +32,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'test') {
+    ENV.EmberENV.RAISE_ON_DEPRECATION = !process.env['ALLOW_DEPRECATIONS'];
     // Testem prefers this...
     ENV.baseURL = '/';
     ENV.locationType = 'none';
@@ -56,7 +57,7 @@ module.exports = function(environment) {
 
   ENV.apiHost = process.env.API_HOST || 'mobecentral.herokuapp.com'
   ENV.apiPort = process.env.API_PORT ? ':' + process.env.API_PORT : ''
-  ENV.apiProtocol = process.env.API_PROTOCOL ? `${process.env.API_PROTOCOL}://` : (environment == 'production' ? 'https://' : 'http://')
+  ENV.apiProtocol = process.env.API_PROTOCOL ? `${process.env.API_PROTOCOL}://` : (environment == 'production' ? 'https://' : 'https://')
   ENV.apiUrl = process.env.API_URL || `${ENV.apiProtocol}${ENV.apiHost}${ENV.apiPort}`;
 
   return ENV;
