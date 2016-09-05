@@ -71,12 +71,16 @@ export default Ember.Component.extend(ResizeAware, {
 
       var labelFmt = d => {
         var percentage = d.value.amount / amountTotal.value();
-        return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
+        // return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
+        return `${d.key}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.count)}) `;
+
       };
 
       var labelFmt2 = d => {
         var percentage = d.value.amount / amountTotal.value();
-        return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
+        // return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
+        return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.count)}) `;
+
       };
 
       var monthly = crossfilter(this.data);
@@ -178,6 +182,11 @@ export default Ember.Component.extend(ResizeAware, {
         .margins({ top: 10, right: 50, bottom: 50, left: 60 })
         .height(250)
         .valueAccessor(countAccessor)
+        .title(function(d) {
+          let monthOnly = d.key;
+          monthOnly = monthOnly.toString().substr(4, 4);
+          return `${monthOnly}: ${currencyFmt(d.value.amount)} (${quantityFmt(d.value.count)})`;
+        })
         .x(d3.time.scale().domain([minDate, maxDate]))
         .xUnits(d3.time.months)
         .dimension(dateDim)
@@ -204,6 +213,15 @@ export default Ember.Component.extend(ResizeAware, {
         ]);
       this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
+      // this.monthChart = dc.rowChart('#monthChart')
+      //        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
+      //        .height(450)
+      //        .label(labelFmt2)
+      //        .valueAccessor(amountAccessor)
+      //        .dimension(monthDim)
+      //        .group(amountByMonth)
+      //        .elasticX(true);
+      //      this.monthChart.xAxis().ticks(5);
 
 
       this.departmentChart = dc.rowChart('#departmentChart')
@@ -371,9 +389,9 @@ export default Ember.Component.extend(ResizeAware, {
     var tip = d3.tip().attr('class', 'd3-tip')
       .html(function() {
         let textContent = this.textContent;
-        let textContentMonth = textContent.substr(4, 4);
-        let textContentNumber = textContent.substr(40);
-        return '<span>' + textContentMonth + ' : ' + textContentNumber + '</span>';
+        // let textContentMonth = textContent.substr(4, 4);
+        // let textContentNumber = textContent.substr(40);
+        return '<span>' + textContent + '</span>';
       }).offset([-10, 0]);
 
 
