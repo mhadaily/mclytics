@@ -3,9 +3,9 @@ import d3 from 'd3';
 import crossfilter from 'npm:crossfilter2';
 import dc from 'npm:dc';
 import ResizeAware from 'ember-resize/mixins/resize-aware';
+import moment from 'moment';
 
-
-export default Ember.Component.extend(ResizeAware,{
+export default Ember.Component.extend(ResizeAware, {
 
   data: null,
   universe: null,
@@ -39,87 +39,108 @@ export default Ember.Component.extend(ResizeAware,{
         return d.value.count;
       }
 
-      function reduceAdd(p,v) {
+      function reduceAdd(p, v) {
         p.quantity += v.quantity;
-        p.amount   += v.amount;
-        p.count   += v.count;
+        p.amount += v.amount;
+        p.count += v.count;
         return p;
       }
 
-      function reduceRem(p,v) {
-        p.quantity  -= v.quantity;
-        p.amount    -= v.amount;
-        p.count    -= v.count;
+      function reduceRem(p, v) {
+        p.quantity -= v.quantity;
+        p.amount -= v.amount;
+        p.count -= v.count;
         return p;
       }
 
       function reduceIni() {
-        return {count: 0,quantity: 0, amount: 0.0};
+        return { count: 0, quantity: 0, amount: 0.0 };
       }
 
 
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November', 'December'];
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
 
-      var weekDaysName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+      var weekDaysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
       var currencyFmt = d3.format("$,.2f");
       var quantityFmt = d3.format(",f");
-      var countFmt = d3.format(",f");
+      //var countFmt = d3.format(",f");
       var percentageFmt = d3.format(".2%");
 
-      var labelFmt    = d=>{
+      var labelFmt = d => {
         var percentage = d.value.amount / amountTotal.value();
         return `${d.key}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
       };
 
-      var labelFmt2    = d=>{
+      var labelFmt2 = d => {
         var percentage = d.value.amount / amountTotal.value();
         return `${monthNames[d.key]}: ${currencyFmt(d.value.amount)} @${percentageFmt(percentage)} (${quantityFmt(d.value.count)}) `;
       };
 
       var monthly = crossfilter(this.data);
 
-      var dateDim             = monthly.dimension(d=>{return d3.time.month(d.date);});
-      var departmentDim       = monthly.dimension(d=>{return d.department_name;});
-      var statusDim           = monthly.dimension(d=>{return d.status;});
-      var groupDim            = monthly.dimension(d=>{return d.product_group;});
-      var yearDim             = monthly.dimension(d=>{return d.date.getFullYear();});
-      var monthDim            = monthly.dimension(d=>{return d.date.getMonth();});
-      var weekDim             = monthly.dimension(d=>{return weekDaysName[d.date.getDay()];});
+      var dateDim = monthly.dimension(d => {
+        return d3.time.month(d.date);
+      });
+      var departmentDim = monthly.dimension(d => {
+        return d.department_name;
+      });
+      var statusDim = monthly.dimension(d => {
+        return d.status;
+      });
+      var groupDim = monthly.dimension(d => {
+        return d.product_group;
+      });
+      var yearDim = monthly.dimension(d => {
+        return d.date.getFullYear();
+      });
+      var monthDim = monthly.dimension(d => {
+        return d.date.getMonth();
+      });
+      var weekDim = monthly.dimension(d => {
+        return weekDaysName[d.date.getDay()];
+      });
 
 
-      var amountByDate        = dateDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByDepartment  = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByStatus      = statusDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByGroup       = groupDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByYear        = yearDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByMonth       = monthDim.group().reduce(reduceAdd,reduceRem,reduceIni);
-      var amountByWeek        = weekDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      var amountByDate = dateDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByDepartment = departmentDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByStatus = statusDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByGroup = groupDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByYear = yearDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByMonth = monthDim.group().reduce(reduceAdd, reduceRem, reduceIni);
+      var amountByWeek = weekDim.group().reduce(reduceAdd, reduceRem, reduceIni);
 
-      var totalByDepartment   = departmentDim.group().reduce(reduceAdd,reduceRem,reduceIni);
+      // var totalByDepartment = departmentDim.group().reduce(reduceAdd, reduceRem, reduceIni);
 
-      var amountTotal         = monthly.groupAll().reduceSum(dc.pluck('amount'));
-      var quantityTotal       = monthly.groupAll().reduceSum(dc.pluck('quantity'));
-      var countTotal          = monthly.groupAll().reduceSum(dc.pluck('count'));
+      var amountTotal = monthly.groupAll().reduceSum(dc.pluck('amount'));
+      var quantityTotal = monthly.groupAll().reduceSum(dc.pluck('quantity'));
+      var countTotal = monthly.groupAll().reduceSum(dc.pluck('count'));
 
 
-      var minDate = d3.time.month(moment(dateDim.bottom(1)[0].date).add(-1,'month').toDate());
+      var minDate = d3.time.month(moment(dateDim.bottom(1)[0].date).add(-1, 'month').toDate());
       var maxDate = d3.time.month.ceil(dateDim.top(1)[0].date);
 
       this.boxND = dc.numberDisplay("#boxND")
         .formatNumber(currencyFmt)
-        .valueAccessor(function(d){return Math.round(d * 100) / 100;})
+        .valueAccessor(function(d) {
+          return Math.round(d * 100) / 100;
+        })
         .group(amountTotal);
 
       this.quantityND = dc.numberDisplay("#quantityND")
         .formatNumber(d3.format(",f"))
-        .valueAccessor(function(d){return d;})
+        .valueAccessor(function(d) {
+          return d;
+        })
         .group(quantityTotal);
 
       this.countND = dc.numberDisplay("#countND")
         .formatNumber(d3.format(",f"))
-        .valueAccessor(function(d){return d;})
+        .valueAccessor(function(d) {
+          return d;
+        })
         .group(countTotal);
 
 
@@ -136,12 +157,12 @@ export default Ember.Component.extend(ResizeAware,{
        */
 
       this.historicalSelect = dc.barChart('#historicalSelect')
-        .margins({top: 10, right: 25, bottom: 50, left: 60})
+        .margins({ top: 10, right: 25, bottom: 50, left: 60 })
         .centerBar(true)
         .height(100)
         .gap(4)
         .valueAccessor(amountAccessor)
-        .x(d3.time.scale().domain([minDate,maxDate]))
+        .x(d3.time.scale().domain([minDate, maxDate]))
         .xUnits(d3.time.months)
         .dimension(dateDim)
         .group(amountByDate)
@@ -152,12 +173,12 @@ export default Ember.Component.extend(ResizeAware,{
 
 
 
-      this.historicalChart = dc.compositeChart('#historicalChart')
+      this.historicalChart = dc.compositeChart('#historicalChart');
       this.historicalChart
-        .margins({top: 10, right: 50, bottom: 50, left: 60})
+        .margins({ top: 10, right: 50, bottom: 50, left: 60 })
         .height(250)
         .valueAccessor(countAccessor)
-        .x(d3.time.scale().domain([minDate,maxDate]))
+        .x(d3.time.scale().domain([minDate, maxDate]))
         .xUnits(d3.time.months)
         .dimension(dateDim)
         .group(amountByDate)
@@ -166,25 +187,27 @@ export default Ember.Component.extend(ResizeAware,{
         .legend(dc.legend().x(80).y(0).gap(5).autoItemWidth(true))
         .compose([
           dc.barChart(this.historicalChart)
-            .centerBar(true)
-            .gap(4)
-            .valueAccessor(amountAccessor)
-            .group(amountByDate,"Total Amount"),
+          .centerBar(true)
+          .gap(4)
+          .valueAccessor(amountAccessor)
+          .group(amountByDate, "Total Amount"),
           dc.lineChart(this.historicalChart)
-            .valueAccessor(quantityAccessor)
-            .group(amountByDate,"Quantity Sold")
-            .ordinalColors(["red"])
-            .useRightYAxis(true),
+          .valueAccessor(quantityAccessor)
+          .group(amountByDate, "Quantity Sold")
+          .ordinalColors(["red"])
+          .useRightYAxis(true),
           dc.lineChart(this.historicalChart)
-            .valueAccessor(countAccessor)
-            .group(amountByDate,"Number Of Sales")
-            .ordinalColors(["green"])
-            .useRightYAxis(true)
+          .valueAccessor(countAccessor)
+          .group(amountByDate, "Number Of Sales")
+          .ordinalColors(["green"])
+          .useRightYAxis(true)
         ]);
       this.historicalChart.xAxis().ticks(d3.time.month, 1);
 
+
+
       this.departmentChart = dc.rowChart('#departmentChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 10})
+        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
         .height(250)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -194,7 +217,8 @@ export default Ember.Component.extend(ResizeAware,{
       this.departmentChart.xAxis().ticks(5);
 
 
-      this.departmentPieChart = dc.pieChart('#departmentPieChart')
+      this.departmentPieChart = dc.pieChart('#departmentPieChart');
+      this.departmentPieChart
         .width(168)
         .height(180)
         .innerRadius(10)
@@ -202,13 +226,12 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(departmentDim)
         .valueAccessor(amountAccessor)
         .group(amountByDepartment)
-        .ordinalColors(['#a65628','#4daf4a','#984ea3','#ff7f00','#e41a1c','#377eb8','#ffff33'])
+        .ordinalColors(['#a65628', '#4daf4a', '#984ea3', '#ff7f00', '#e41a1c', '#377eb8', '#ffff33']);
 
-      this.departmentPieChart;
 
 
       this.groupChart = dc.rowChart('#groupChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 10})
+        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
         .height(500)
         .valueAccessor(amountAccessor)
         .label(labelFmt)
@@ -218,7 +241,7 @@ export default Ember.Component.extend(ResizeAware,{
       this.groupChart.xAxis().ticks(5);
 
       this.yearChart = dc.rowChart('#yearChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 10})
+        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
         .height(150)
         .label(labelFmt)
         .valueAccessor(amountAccessor)
@@ -229,7 +252,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.monthChart = dc.rowChart('#monthChart')
-        .margins({top: 10, right: 30, bottom: 30, left:10})
+        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
         .height(450)
         .label(labelFmt2)
         .valueAccessor(amountAccessor)
@@ -239,20 +262,19 @@ export default Ember.Component.extend(ResizeAware,{
       this.monthChart.xAxis().ticks(5);
 
 
-      this.monthPieChart = dc.pieChart('#monthPieChart')
+      this.monthPieChart = dc.pieChart('#monthPieChart');
+      this.monthPieChart
         .width(168)
         .height(220)
         .innerRadius(10)
         .legend(dc.legend().x(10).y(10).gap(10))
         .dimension(monthDim)
         .valueAccessor(amountAccessor)
-        .group(amountByMonth)
-
-      this.monthPieChart;
+        .group(amountByMonth);
 
 
-     this.weekChart = dc.rowChart('#weekChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 0})
+      this.weekChart = dc.rowChart('#weekChart')
+        .margins({ top: 10, right: 30, bottom: 30, left: 0 })
         .height(450)
         .label(labelFmt)
         .valueAccessor(amountAccessor)
@@ -263,7 +285,7 @@ export default Ember.Component.extend(ResizeAware,{
 
 
       this.statusChart = dc.rowChart('#statusChart')
-        .margins({top: 10, right: 30, bottom: 30, left: 10})
+        .margins({ top: 10, right: 30, bottom: 30, left: 10 })
         .label(labelFmt)
         .valueAccessor(amountAccessor)
         .dimension(statusDim)
@@ -272,7 +294,8 @@ export default Ember.Component.extend(ResizeAware,{
       this.statusChart.xAxis().ticks(3);
 
 
-      this.statusPieChart = dc.pieChart('#statusPieChart')
+      this.statusPieChart = dc.pieChart('#statusPieChart');
+      this.statusPieChart
         .width(168)
         .height(180)
         .innerRadius(10)
@@ -280,9 +303,7 @@ export default Ember.Component.extend(ResizeAware,{
         .dimension(statusDim)
         .valueAccessor(amountAccessor)
         .group(amountByStatus)
-        .ordinalColors(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'])
-
-      this.statusPieChart;
+        .ordinalColors(['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628']);
 
 
 
@@ -338,7 +359,7 @@ export default Ember.Component.extend(ResizeAware,{
     rect = document.getElementById('statusPieChart').parentElement.getBoundingClientRect();
     this.statusPieChart.width(rect.width);
 
-   rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
+    rect = document.getElementById('departmentPieChart').parentElement.getBoundingClientRect();
     this.departmentPieChart.width(rect.width);
 
     rect = document.getElementById('monthPieChart').parentElement.getBoundingClientRect();
@@ -348,26 +369,36 @@ export default Ember.Component.extend(ResizeAware,{
 
 
     var tip = d3.tip().attr('class', 'd3-tip')
-        .html(function (d) {
-        return '<span>' + this.textContent + '</span>';
-    }).offset([-10, 0]);
+      .html(function() {
+        let textContent = this.textContent;
+        let textContentMonth = textContent.substr(4, 4);
+        let textContentNumber = textContent.substr(40);
+        return '<span>' + textContentMonth + ' : ' + textContentNumber + '</span>';
+      }).offset([-10, 0]);
 
 
     d3.select("div#historicalSelect.dc-chart svg").call(tip);
 
     d3.selectAll("rect.bar")
-    .on('mouseover', tip.show )
-    .on("mouseout", tip.hide);
-
+      .on('mouseover', tip.show)
+      .on("mouseout", tip.hide);
   },
 
   actions: {
     masterReset() {
-        dc.filterAll()
-        dc.redrawAll()
+      dc.filterAll();
+      dc.redrawAll();
     },
     reset(chart) {
-      chart ? this.get(chart).filter(null).redrawGroup() :  this.monthly.filterAll()
+      if (chart) {
+        this.get(chart).filter(null).redrawGroup();
+      } else {
+        this.monthly.filterAll();
+      }
+      /*todo
+       *Bug for for the following line against Jslint warning
+       */
+      // chart ? this.get(chart).filter(null).redrawGroup() : this.monthly.filterAll();
     }
   }
 
