@@ -124,7 +124,8 @@ export default Ember.Component.extend(ResizeAware, {
 
 
       var minDate = d3.time.month(moment(dateDim.bottom(1)[0].date).add(-1, 'month').toDate());
-      var maxDate = d3.time.month.ceil(dateDim.top(1)[0].date);
+      var maxDate = d3.time.month(moment(dateDim.top(1)[0].date).add(+1, 'month').toDate());
+     // var maxDate2 = d3.time.month.ceil(dateDim.top(1)[0].date);
 
       this.boxND = dc.numberDisplay("#boxND")
         .formatNumber(currencyFmt)
