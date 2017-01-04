@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
       monthNames.unshift('' + d.getFullYear() + ',' + d.getMonth() + ',1');
     }
     for (j; j <= 12; j++) {
-      monthNames.unshift('2016,' + j + ',1');
+      monthNames.push('2016,' + j + ',1');
     }
     return monthNames;
   }).volatile(),
