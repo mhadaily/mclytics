@@ -31,7 +31,7 @@
                  <div class="buttonList">
                   {{#each months as |month|}}
                             {{link-to
-                            (moment-format month 'MMM') 'revenue'
+                              (moment-format month "MMM/YY") 'revenue'
                             (query-params date=(moment-format month "Y-M-D"))
                             class=(if (eq selectedMonth month) "btn btn-sm btn-danger" "btn btn-sm btn-warning")
                           }}
