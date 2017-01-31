@@ -24,10 +24,14 @@ export default Ember.Controller.extend({
     let todayMonth = today.getMonth();
     for (i; i <= todayMonth + 1; i++) {
       d = new Date(today.getFullYear(), i, 1);
-      monthNames.unshift('' + d.getFullYear() + ',' + d.getMonth() + ',1');
+      let mon = d.getMonth();
+      mon < 10 ? mon = '0' + mon : mon;
+      monthNames.unshift('' + d.getFullYear() + '-' + mon + '-01');
     }
     for (j; j <= 12; j++) {
-      monthNames.push('2016,' + j + ',1');
+      let k = j;
+      k < 10 ? k = '0' + k : k;
+      monthNames.push('2016-' + k + '-01');
     }
     return monthNames;
   }).volatile(),
